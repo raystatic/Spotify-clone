@@ -13,6 +13,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<String> arraySongList, arrayArtistList;
 
+    ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +35,11 @@ public class MainActivity extends AppCompatActivity {
         arraySongList = new ArrayList<>();
         arrayArtistList = new ArrayList<>();
 
+        progressBar = findViewById(R.id.main_progress);
+
         checkPermission();
+
+        progressBar.setVisibility(View.VISIBLE);
 
     }
 
@@ -47,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
             }
         }else{
-            Toast.makeText(MainActivity.this,"Please provide permissions from settings",Toast.LENGTH_SHORT).show();
+            fetchSongs();
         }
     }
 
@@ -96,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchSongs() {
         getMusic();
-        Log.d("songlist",arraySongList.size() + arrayArtistList.size()+"");
+        Log.d("songlist",arraySongList.size() +" :" + arrayArtistList.size()+"");
+        if (progressBar.getVisibility() == View.VISIBLE){
+            progressBar.setVisibility(View.GONE);
+        }
     }
 }
