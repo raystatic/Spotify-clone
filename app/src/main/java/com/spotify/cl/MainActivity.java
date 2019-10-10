@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     ProgressBar progressBar;
 
+    RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +41,10 @@ public class MainActivity extends AppCompatActivity {
         arrayArtistList = new ArrayList<>();
 
         progressBar = findViewById(R.id.main_progress);
+        recyclerView = findViewById(R.id.main_rv);
 
         checkPermission();
+        progressBar  = new ProgressBar(MainActivity.this);
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -107,6 +114,14 @@ public class MainActivity extends AppCompatActivity {
         Log.d("songlist",arraySongList.size() +" :" + arrayArtistList.size()+"");
         if (progressBar.getVisibility() == View.VISIBLE){
             progressBar.setVisibility(View.GONE);
+        }
+        if (arrayArtistList.size()!=0 && arraySongList.size()!=0){
+            RecyclerMainAdpter adapter = new RecyclerMainAdpter(MainActivity.this,arraySongList,arrayArtistList);
+            GridLayoutManager layoutManager = new GridLayoutManager(MainActivity.this,4,RecyclerView.HORIZONTAL,false);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(layoutManager);
+        }else{
+            Toast.makeText(MainActivity.this, "Unable to find songs on the device!",Toast.LENGTH_SHORT).show();
         }
     }
 }
