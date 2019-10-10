@@ -43,10 +43,11 @@ public class MainActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.main_progress);
         recyclerView = findViewById(R.id.main_rv);
 
-        checkPermission();
         progressBar  = new ProgressBar(MainActivity.this);
 
         progressBar.setVisibility(View.VISIBLE);
+
+        checkPermission();
 
     }
 
@@ -117,7 +118,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if (arrayArtistList.size()!=0 && arraySongList.size()!=0){
             RecyclerMainAdpter adapter = new RecyclerMainAdpter(MainActivity.this,arraySongList,arrayArtistList);
-            GridLayoutManager layoutManager = new GridLayoutManager(MainActivity.this,4,RecyclerView.HORIZONTAL,false);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+//            GridLayoutManager layoutManager = new GridLayoutManager(MainActivity.this,4,RecyclerView.HORIZONTAL,false);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(layoutManager);
         }else{
