@@ -15,11 +15,11 @@ public class RecyclerMainAdpter extends RecyclerView.Adapter<RecyclerMainAdpter.
 
     Context context;
     ArrayList<String> songs, artists;
+    ArrayList<Song> songArrayList;
 
-    public RecyclerMainAdpter(Context context, ArrayList<String> songs, ArrayList<String> artists) {
+    public RecyclerMainAdpter(Context context, ArrayList<Song> songArrayList) {
         this.context = context;
-        this.songs = songs;
-        this.artists = artists;
+        this.songArrayList = songArrayList;
     }
 
     @NonNull
@@ -31,15 +31,16 @@ public class RecyclerMainAdpter extends RecyclerView.Adapter<RecyclerMainAdpter.
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        String song = songs.get(position);
-        String artist = artists.get(position);
-        holder.songname.setText(song);
-        holder.artistname.setText(artist);
+
+        Song song = songArrayList.get(position);
+
+        holder.songname.setText(song.songName);
+        holder.artistname.setText(song.artistName);
     }
 
     @Override
     public int getItemCount() {
-        return songs.size();
+        return songArrayList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{

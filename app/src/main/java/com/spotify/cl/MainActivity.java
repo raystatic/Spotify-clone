@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST = 1;
 
-    ArrayList<String> arraySongList, arrayArtistList;
+    ArrayList<Song> songArrayList;
 
     ProgressBar progressBar;
 
@@ -37,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        arraySongList = new ArrayList<>();
-        arrayArtistList = new ArrayList<>();
+        songArrayList = new ArrayList<>();
 
         progressBar = findViewById(R.id.main_progress);
         recyclerView = findViewById(R.id.main_rv);
@@ -76,12 +75,14 @@ public class MainActivity extends AppCompatActivity {
 
             int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             int songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+            int songID = songCursor.getColumnIndex(MediaStore.Audio.Media._ID);
 
             do{
+                long id = songCursor.getLong(songID);
                 String currentTitle = songCursor.getString(songTitle);
                 String currentArtist = songCursor.getString(songArtist);
-                arraySongList.add(currentTitle);
-                arrayArtistList.add(currentArtist);
+                Song song = new Song(id,currentTitle,currentArtist);
+                songArrayList.add(song);
             }while (songCursor.moveToNext());
 
         }
@@ -112,12 +113,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchSongs() {
         getMusic();
-        Log.d("songlist",arraySongList.size() +" :" + arrayArtistList.size()+"");
+//        Log.d("songlist",arraySongList.size() +" :" + arrayArtistList.size()+"");
         if (progressBar.getVisibility() == View.VISIBLE){
             progressBar.setVisibility(View.GONE);
         }
-        if (arrayArtistList.size()!=0 && arraySongList.size()!=0){
-            RecyclerMainAdpter adapter = new RecyclerMainAdpter(MainActivity.this,arraySongList,arrayArtistList);
+        if (songArrayList.size()!=0){
+            RecyclerMainAdpter adapter = new RecyclerMainAdpter(MainActivity.this,songArrayList);
             LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
 //            GridLayoutManager layoutManager = new GridLayoutManager(MainActivity.this,4,RecyclerView.HORIZONTAL,false);
             recyclerView.setAdapter(adapter);

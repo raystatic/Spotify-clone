@@ -38,6 +38,7 @@
         android:layout_height="wrap_content"
         android:text="DIVINE"
         android:textColor="#fff"
+        android:visibility="gone"
         android:id="@+id/artist_name_tv"
         android:layout_gravity="center"/>
 
