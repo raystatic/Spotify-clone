@@ -25,6 +25,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements RecyclerMainAdpter.SongInteractor {
@@ -39,7 +41,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
 
     MusicService musicSrv;
     Intent playIntent;
-    boolean musicBound = false;
+    boolean musicBound = false, isPlaying = false;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +53,26 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
 
         progressBar = findViewById(R.id.main_progress);
         recyclerView = findViewById(R.id.main_rv);
+        fab = findViewById(R.id.fab_btn);
 
         progressBar  = new ProgressBar(MainActivity.this);
 
         progressBar.setVisibility(View.VISIBLE);
 
         checkPermission();
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isPlaying){
+                    if (playIntent!=null){
+                        stopService(playIntent);
+                      //  musicSrv = null;
+                       // System.exit(0);
+                    }
+                }
+            }
+        });
 
     }
 
@@ -153,9 +170,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
     }
 
     @Override
-    public void onSongClicked(View view) {
-        musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
-        musicSrv.playSong();
+    public void onSongClicked(Song song) {
+       // musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
+        musicSrv.playSong(song.getId());
+        isPlaying = true;
+        fab.setImageResource(R.drawable.ic_action_pause);
     }
 
     @Override

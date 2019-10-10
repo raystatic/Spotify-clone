@@ -42,7 +42,7 @@ public class RecyclerMainAdpter extends RecyclerView.Adapter<RecyclerMainAdpter.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onSongClicked(holder.itemView);
+                listener.onSongClicked(song);
             }
         });
 
@@ -65,7 +65,7 @@ public class RecyclerMainAdpter extends RecyclerView.Adapter<RecyclerMainAdpter.
     }
 
     public interface SongInteractor{
-        void onSongClicked(View view);
+        void onSongClicked(Song song);
     }
 
 }

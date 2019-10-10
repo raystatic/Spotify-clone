@@ -56,10 +56,10 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         return false;
     }
 
-    public void playSong(){
+    public void playSong(long currSong){
         player.reset();
         Song playSong = songs.get(songPosn);
-        long currSong = playSong.getId();
+//        long currSong = playSong.getId();
         Uri trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,currSong);
         try {
             player.setDataSource(getApplicationContext(),trackUri);
