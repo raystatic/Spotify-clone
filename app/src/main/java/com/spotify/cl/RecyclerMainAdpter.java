@@ -16,10 +16,12 @@ public class RecyclerMainAdpter extends RecyclerView.Adapter<RecyclerMainAdpter.
     Context context;
     ArrayList<String> songs, artists;
     ArrayList<Song> songArrayList;
+    SongInteractor listener;
 
-    public RecyclerMainAdpter(Context context, ArrayList<Song> songArrayList) {
+    public RecyclerMainAdpter(Context context, ArrayList<Song> songArrayList, SongInteractor listener) {
         this.context = context;
         this.songArrayList = songArrayList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -30,12 +32,20 @@ public class RecyclerMainAdpter extends RecyclerView.Adapter<RecyclerMainAdpter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
 
-        Song song = songArrayList.get(position);
+        final Song song = songArrayList.get(position);
 
         holder.songname.setText(song.songName);
         holder.artistname.setText(song.artistName);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onSongClicked(holder.itemView);
+            }
+        });
+
     }
 
     @Override
@@ -52,6 +62,10 @@ public class RecyclerMainAdpter extends RecyclerView.Adapter<RecyclerMainAdpter.
             songname = itemView.findViewById(R.id.song_name_tv);
             artistname = itemView.findViewById(R.id.artist_name_tv);
         }
+    }
+
+    public interface SongInteractor{
+        void onSongClicked(View view);
     }
 
 }
