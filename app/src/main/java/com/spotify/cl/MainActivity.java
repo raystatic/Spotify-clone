@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements RecyclerMainAdpter.SongInteractor {
 
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
     SeekBar seekBar;
 
     TextView songNameTv;
+    TextView currentTimeTv, totalTimeTv;
     int songPosition;
 
     @Override
@@ -60,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
         fab = findViewById(R.id.fab_btn);
         seekBar = findViewById(R.id.song_seek_bar);
         songNameTv = findViewById(R.id.song_text_tv);
+        currentTimeTv = findViewById(R.id.current_time_tv);
+        totalTimeTv = findViewById(R.id.total_time_tv);
 
         progressBar  = new ProgressBar(MainActivity.this);
 
@@ -158,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
             songIsPlaying = true;
             fab.setImageResource(R.drawable.ic_action_pause);
             seekBar.setProgress(0);
+            String totalTime = convertToMinutesAndSeconds(mediaPlayer.getDuration());
+            totalTimeTv.setText(totalTime);
             if (song.getSongName().length()>15){
                 songNameTv.setText(song.getSongName().substring(0,15)+"...");
             }else{
@@ -197,10 +203,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
                             e.printStackTrace();
                         }
                         songPosition+=1000;
+                        final String currentTime = convertToMinutesAndSeconds(songPosition);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 seekBar.setProgress(songPosition);
+                                currentTimeTv.setText(currentTime);
                             }
                         });
                     }
@@ -230,6 +238,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
                     mediaPlayer.seekTo(progressValue);
+                    seekBar.setProgress(progressValue);
+                    currentTimeTv.setText(convertToMinutesAndSeconds(progressValue));
+                    songPosition = progressValue;
                 }
             });
 
@@ -237,6 +248,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
             e.printStackTrace();
         }
 
+    }
+
+    private String convertToMinutesAndSeconds(int duration) {
+        long mins = ((duration / 1000) / 60);
+        long secs = ((duration / 1000) % 60);
+
+        return mins+":"+secs;
     }
 
     @Override
