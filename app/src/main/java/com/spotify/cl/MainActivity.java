@@ -1,6 +1,7 @@
 package com.spotify.cl;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -11,12 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.MediaStore;
@@ -27,6 +32,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements RecyclerMainAdpter.SongInteractor {
@@ -39,9 +45,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
 
     RecyclerView recyclerView;
 
-    MusicService musicSrv;
-    Intent playIntent;
-    boolean musicBound = false, isPlaying = false;
+    Boolean songIsPlaying = false;
+    MediaPlayer mediaPlayer;
+
     FloatingActionButton fab;
 
     @Override
@@ -61,35 +67,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
 
         checkPermission();
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isPlaying){
-                    if (playIntent!=null){
-                        stopService(playIntent);
-                      //  musicSrv = null;
-                       // System.exit(0);
-                    }
-                }
-            }
-        });
-
     }
-
-    private ServiceConnection musicConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            MusicService.MusicBinder binder = (MusicService.MusicBinder) iBinder;
-            musicSrv = binder.getService();
-            musicSrv.setList(songArrayList);
-            musicBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            musicBound = false;
-        }
-    };
 
     public void checkPermission(){
         if (ContextCompat.checkSelfPermission(MainActivity.this,
@@ -144,8 +122,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
                     }
                 }else{
                     Toast.makeText(MainActivity.this,"Permission Not Granted",Toast.LENGTH_SHORT).show();
-                    //checkPermission();
-                  //  finish();
                 }
                 return;
             }
@@ -154,14 +130,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
 
     private void fetchSongs() {
         getMusic();
-//        Log.d("songlist",arraySongList.size() +" :" + arrayArtistList.size()+"");
         if (progressBar.getVisibility() == View.VISIBLE){
             progressBar.setVisibility(View.GONE);
         }
         if (songArrayList.size()!=0){
             RecyclerMainAdpter adapter = new RecyclerMainAdpter(MainActivity.this,songArrayList, this);
             LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
-//            GridLayoutManager layoutManager = new GridLayoutManager(MainActivity.this,4,RecyclerView.HORIZONTAL,false);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(layoutManager);
         }else{
@@ -169,21 +143,46 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onSongClicked(Song song) {
-       // musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
-        musicSrv.playSong(song.getId());
-        isPlaying = true;
-        fab.setImageResource(R.drawable.ic_action_pause);
+        Uri trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,song.getId());
+
+        if (mediaPlayer!=null){
+            mediaPlayer.release();
+        }
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try{
+            mediaPlayer.setDataSource(MainActivity.this,trackUri);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            songIsPlaying = true;
+            fab.setImageResource(R.drawable.ic_action_pause);
+
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (songIsPlaying){
+                        mediaPlayer.pause();
+                        songIsPlaying = false;
+                        fab.setImageResource(R.drawable.ic_action_play);
+                    }else{
+                        mediaPlayer.start();
+                        songIsPlaying = true;
+                        fab.setImageResource(R.drawable.ic_action_pause);
+                    }
+                }
+            });
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (playIntent == null){
-            playIntent = new Intent(MainActivity.this, MusicService.class);
-            bindService(playIntent,musicConnection, Context.BIND_AUTO_CREATE);
-            startService(playIntent);
-        }
     }
 }
