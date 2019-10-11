@@ -1,7 +1,6 @@
 package com.spotify.cl;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -16,10 +15,8 @@ import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -47,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
 
     SeekBar seekBar;
 
+    TextView songNameTv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
         recyclerView = findViewById(R.id.main_rv);
         fab = findViewById(R.id.fab_btn);
         seekBar = findViewById(R.id.song_seek_bar);
+        songNameTv = findViewById(R.id.song_text_tv);
 
         progressBar  = new ProgressBar(MainActivity.this);
 
@@ -114,9 +114,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
                     if (ContextCompat.checkSelfPermission(MainActivity.this,
                             Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
                         Toast.makeText(MainActivity.this,"Permission Granted", Toast.LENGTH_SHORT).show();
-
                         fetchSongs();
-
                     }
                 }else{
                     Toast.makeText(MainActivity.this,"Permission Not Granted",Toast.LENGTH_SHORT).show();
@@ -156,6 +154,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
             mediaPlayer.start();
             songIsPlaying = true;
             fab.setImageResource(R.drawable.ic_action_pause);
+            if (song.getSongName().length()>15){
+                songNameTv.setText(song.getSongName().substring(0,15)+"...");
+            }else{
+                songNameTv.setText(song.getSongName());
+            }
 
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
