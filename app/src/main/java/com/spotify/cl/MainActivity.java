@@ -17,6 +17,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -202,7 +203,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
                         }catch (InterruptedException e){
                             e.printStackTrace();
                         }
-                        songPosition+=1000;
+                        if (!convertToMinutesAndSeconds(songPosition).equals(convertToMinutesAndSeconds(mediaPlayer.getDuration()))){
+                            songPosition+=1000;
+                        }
+                        Log.d("duration",songPosition+" : "+mediaPlayer.getDuration());
                         final String currentTime = convertToMinutesAndSeconds(songPosition);
                         runOnUiThread(new Runnable() {
                             @Override
