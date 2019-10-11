@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
     RecyclerView recyclerView;
 
     Boolean songIsPlaying = false;
+    Boolean songCompleted = false;
     MediaPlayer mediaPlayer;
 
     FloatingActionButton fab;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
     SeekBar seekBar;
 
     TextView songNameTv;
+    int songPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +142,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
     }
 
     @Override
-    public void onSongClicked(Song song) {
+    public void onSongClicked(final Song song) {
+
         Uri trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,song.getId());
 
         if (mediaPlayer!=null){
@@ -154,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
             mediaPlayer.start();
             songIsPlaying = true;
             fab.setImageResource(R.drawable.ic_action_pause);
+            seekBar.setProgress(0);
             if (song.getSongName().length()>15){
                 songNameTv.setText(song.getSongName().substring(0,15)+"...");
             }else{
@@ -166,9 +170,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
                     if (songIsPlaying){
                         mediaPlayer.pause();
                         songIsPlaying = false;
+                        songCompleted = false;
                         fab.setImageResource(R.drawable.ic_action_play);
                     }else{
-                        mediaPlayer.start();
+                        if (songCompleted){
+                            onSongClicked(song);
+                        }else{
+                            mediaPlayer.start();
+                        }
                         songIsPlaying = true;
                         fab.setImageResource(R.drawable.ic_action_pause);
                     }
@@ -178,13 +187,39 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
 
             seekBar.setMax(mediaPlayer.getDuration());
 
+            new Thread(){
+                public void run(){
+                    songPosition=0;
+                    while (songPosition < mediaPlayer.getDuration()){
+                        try{
+                            Thread.sleep(1000);
+                        }catch (InterruptedException e){
+                            e.printStackTrace();
+                        }
+                        songPosition+=1000;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                seekBar.setProgress(songPosition);
+                            }
+                        });
+                    }
+                }
+            }.start();
+
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
                 int progressValue = 0;
 
                 @Override
-                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                public void onProgressChanged(SeekBar seekBar1, int i, boolean b) {
                     progressValue = i;
+                    if (i==mediaPlayer.getDuration()){
+                        mediaPlayer.stop();
+                        songIsPlaying = false;
+                        songCompleted = true;
+                        fab.setImageResource(R.drawable.ic_action_play);
+                    }
                 }
 
                 @Override
