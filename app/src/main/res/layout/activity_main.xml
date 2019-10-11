@@ -33,7 +33,18 @@
                 android:textColor="#fff"
                 android:maxLines="1"
                 android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:id="@+id/song_text_tv"/>
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/song_text_tv"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginStart="25dp"
+                android:thumbTint="#fff"
+                android:theme="@style/SeekBarTheme"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:layout_width="wrap_content"
@@ -41,7 +52,7 @@
                 android:backgroundTint="#000"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="20dp"
                 app:fabSize="normal"
                 android:id="@+id/fab_btn"
                 android:src="@drawable/ic_action_play"/>
