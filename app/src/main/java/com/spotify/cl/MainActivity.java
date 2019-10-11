@@ -19,8 +19,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
 
     FloatingActionButton fab;
 
+    SeekBar seekBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
         progressBar = findViewById(R.id.main_progress);
         recyclerView = findViewById(R.id.main_rv);
         fab = findViewById(R.id.fab_btn);
+        seekBar = findViewById(R.id.song_seek_bar);
 
         progressBar  = new ProgressBar(MainActivity.this);
 
@@ -135,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onSongClicked(Song song) {
         Uri trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,song.getId());
@@ -164,6 +169,29 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
                         songIsPlaying = true;
                         fab.setImageResource(R.drawable.ic_action_pause);
                     }
+                }
+            });
+
+
+            seekBar.setMax(mediaPlayer.getDuration());
+
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+                int progressValue = 0;
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                    progressValue = i;
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    mediaPlayer.seekTo(progressValue);
                 }
             });
 
