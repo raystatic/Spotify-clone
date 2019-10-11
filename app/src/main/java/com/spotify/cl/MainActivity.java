@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -46,9 +47,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
 
     SeekBar seekBar;
 
-    TextView songNameTv;
+    TextView songNameTv, permission_not_granted_tv;
 //    TextView currentTimeTv, totalTimeTv;
     int songPosition;
+
+    LinearLayout main_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +65,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
         fab = findViewById(R.id.fab_btn);
         seekBar = findViewById(R.id.song_seek_bar);
         songNameTv = findViewById(R.id.song_text_tv);
+        main_layout = findViewById(R.id.main_layout);
+        permission_not_granted_tv = findViewById(R.id.permission_not_granted_tv);
 //        currentTimeTv = findViewById(R.id.current_time_tv);
 //        totalTimeTv = findViewById(R.id.total_time_tv);
 
         progressBar  = new ProgressBar(MainActivity.this);
 
         progressBar.setVisibility(View.VISIBLE);
+        main_layout.setVisibility(View.GONE);
 
         checkPermission();
 
@@ -124,6 +130,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
                     }
                 }else{
                     Toast.makeText(MainActivity.this,"Permission Not Granted",Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    permission_not_granted_tv.setVisibility(View.VISIBLE);
                 }
                 return;
             }
@@ -132,9 +140,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
 
     private void fetchSongs() {
         getMusic();
-        if (progressBar.getVisibility() == View.VISIBLE){
-            progressBar.setVisibility(View.GONE);
-        }
+
+        progressBar.setVisibility(View.GONE);
+        main_layout.setVisibility(View.VISIBLE);
+
         if (songArrayList.size()!=0){
             RecyclerMainAdpter adapter = new RecyclerMainAdpter(MainActivity.this,songArrayList, this);
             LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
