@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
     }
 
     @Override
-    public void onSongClicked(final Song song) {
+    public void onSongClicked(final Song song, final int position) {
 
         Uri trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,song.getId());
 
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
                         fab.setImageResource(R.drawable.ic_action_play);
                     }else{
                         if (songCompleted){
-                            onSongClicked(song);
+                            onSongClicked(song,position);
                         }else{
                             mediaPlayer.start();
                         }

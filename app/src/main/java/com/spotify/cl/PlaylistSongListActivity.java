@@ -58,7 +58,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
 
     BottomSheetBehavior bottomSheetBehavior;
 
-    ImageButton peekPlayBtn;
+    ImageButton peekPlayBtn, prevBtn, nextBtn;
 
     Button playBtn;
     Boolean PLAY_PLAYLIST = false;
@@ -83,6 +83,8 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
         seekBar = findViewById(R.id.song_seek_bar);
         songNameTv = findViewById(R.id.song_text_tv);
         playBtn = findViewById(R.id.play_btn_playlist);
+        prevBtn = findViewById(R.id.prev_song_btn);
+        nextBtn = findViewById(R.id.next_song_btn);
 //        currentTimeTv = findViewById(R.id.current_time_tv);
 //        totalTimeTv = findViewById(R.id.total_time_tv);
 
@@ -141,8 +143,36 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
             public void onClick(View view) {
                 PLAY_PLAYLIST = true;
                 CURRENT_SONG_INDEX = 1;
-                onSongClicked(songArrayList.get(CURRENT_SONG_INDEX));
+                onSongClicked(songArrayList.get(CURRENT_SONG_INDEX), CURRENT_SONG_INDEX);
                 CURRENT_SONG_INDEX += 1;
+            }
+        });
+
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PLAY_PLAYLIST = true;
+                CURRENT_SONG_INDEX +=1;
+                if (CURRENT_SONG_INDEX<songArrayList.size()){
+                    onSongClicked(songArrayList.get(CURRENT_SONG_INDEX),CURRENT_SONG_INDEX);
+                }else{
+                    CURRENT_SONG_INDEX = 0;
+                    onSongClicked(songArrayList.get(CURRENT_SONG_INDEX),CURRENT_SONG_INDEX);
+                }
+            }
+        });
+
+        prevBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PLAY_PLAYLIST = true;
+                CURRENT_SONG_INDEX -=1;
+                if (CURRENT_SONG_INDEX>=0){
+                    onSongClicked(songArrayList.get(CURRENT_SONG_INDEX),CURRENT_SONG_INDEX);
+                }else{
+                    CURRENT_SONG_INDEX = songArrayList.size()-1;
+                    onSongClicked(songArrayList.get(CURRENT_SONG_INDEX),CURRENT_SONG_INDEX);
+                }
             }
         });
 
@@ -228,7 +258,10 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
     }
 
     @Override
-    public void onSongClicked(final Song song) {
+    public void onSongClicked(final Song song, final int position) {
+
+        CURRENT_SONG_INDEX = position;
+
         Uri trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,song.getId());
 
         if (mediaPlayer!=null){
@@ -264,7 +297,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                         fab.setImageResource(R.drawable.ic_action_play_black);
                     }else{
                         if (songCompleted){
-                            onSongClicked(song);
+                            onSongClicked(song,position);
                         }else{
                             mediaPlayer.start();
                         }
@@ -286,7 +319,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                         fab.setImageResource(R.drawable.ic_action_play_black);
                     }else{
                         if (songCompleted){
-                            onSongClicked(song);
+                            onSongClicked(song,position);
                         }else{
                             mediaPlayer.start();
                         }
@@ -348,9 +381,8 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                         songIsPlaying = false;
                         songCompleted = true;
                         if (PLAY_PLAYLIST){
-                            Log.d("plylist","here");
                             if (CURRENT_SONG_INDEX >1 && CURRENT_SONG_INDEX <songArrayList.size()){
-                                onSongClicked(songArrayList.get(CURRENT_SONG_INDEX));
+                                onSongClicked(songArrayList.get(CURRENT_SONG_INDEX),CURRENT_SONG_INDEX);
                                 CURRENT_SONG_INDEX = CURRENT_SONG_INDEX + 1;
                             }
                             if (CURRENT_SONG_INDEX ==songArrayList.size()){
@@ -374,10 +406,6 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                     songPosition = progressValue;
                 }
             });
-
-
-            Log.d("plylist","here1"+songCompleted + " " + PLAY_PLAYLIST);
-
 
         }catch (Exception e){
             e.printStackTrace();

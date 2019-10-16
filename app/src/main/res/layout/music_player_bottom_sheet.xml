@@ -153,6 +153,7 @@
                     <ImageButton
                         android:layout_width="50dp"
                         android:layout_height="50dp"
+                        android:id="@+id/prev_song_btn"
                         android:src="@drawable/ic_action_prev_white"
                         android:background="@android:color/transparent"
                         android:layout_toStartOf="@+id/fab_btn"
@@ -162,6 +163,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:src="@drawable/ic_action_next_white"
+                        android:id="@+id/next_song_btn"
                         android:background="@android:color/transparent"
                         android:layout_toEndOf="@+id/fab_btn"
                         />
