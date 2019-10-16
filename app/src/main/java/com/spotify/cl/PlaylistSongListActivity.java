@@ -331,26 +331,22 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
             });
 
             totalDuration = mediaPlayer.getDuration();
-//
+
             seekBar.setMax(totalDuration);
-//
+
             new Thread(){
                 public void run(){
                     songPosition=0;
                     while (songPosition < totalDuration){
                         try{
-                            Thread.sleep(1000);
+                            Thread.sleep(1500);
                         }catch (InterruptedException e){
                             e.printStackTrace();
                         }
                         if (songIsPlaying){
                             songPosition+=1000;
                         }
-//                        if (!convertToMinutesAndSeconds(songPosition).equals(convertToMinutesAndSeconds(mediaPlayer.getDuration()))){
-//
-//                        }
-//                        Log.d("duration",songPosition+" : "+mediaPlayer.getDuration());
-                        //                      final String currentTime = convertToMinutesAndSeconds(songPosition);
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -368,7 +364,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                     }
                 }
             }.start();
-//
+
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
                 int progressValue = 0;
