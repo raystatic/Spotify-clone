@@ -13,6 +13,7 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
+        <item name="android:textAppearanceButton">@style/RobotoTextViewStyle</item>
     </style>
 
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
