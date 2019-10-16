@@ -30,6 +30,7 @@
                 android:text="Seedhe Pahad Se"
                 android:textColor="#fff"
                 android:maxLines="1"
+                android:id="@+id/peek_song_name_tv"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:layout_centerInParent="true"
                 android:textStyle="bold"/>

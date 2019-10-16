@@ -45,7 +45,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
 
     int songPosition;
 
-    TextView permission_not_granted_tv;
+    TextView permission_not_granted_tv, peek_song_name_tv;
 
     LinearLayout main_layout, llBottomSheet, bottomBar;
 
@@ -63,6 +63,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
         main_layout = findViewById(R.id.main_layout);
         llBottomSheet = findViewById(R.id.bottom_sheet);
         bottomBar = findViewById(R.id.bottom_bar);
+        peek_song_name_tv = findViewById(R.id.peek_song_name_tv);
         permission_not_granted_tv = findViewById(R.id.permission_not_granted_tv);
         bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
 //        currentTimeTv = findViewById(R.id.current_time_tv);
@@ -203,11 +204,11 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
        //     seekBar.setProgress(0);
 //            String totalTime = convertToMinutesAndSeconds(mediaPlayer.getDuration());
 //            totalTimeTv.setText(totalTime);
-//            if (song.getSongName().length()>15){
-//                songNameTv.setText(song.getSongName().substring(0,15)+"...");
-//            }else{
-//                songNameTv.setText(song.getSongName());
-//            }
+            if (song.getSongName().length()>30){
+                peek_song_name_tv.setText(song.getSongName().substring(0,30)+"...");
+            }else{
+                peek_song_name_tv.setText(song.getSongName());
+            }
 //
 //            fab.setOnClickListener(new View.OnClickListener() {
 //                @Override
