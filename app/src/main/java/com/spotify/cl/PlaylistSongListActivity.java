@@ -17,6 +17,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -45,12 +46,12 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
     Boolean songCompleted = false;
     MediaPlayer mediaPlayer;
 
-    int songPosition;
+    int songPosition, totalDuration;
 
     SeekBar seekBar;
     FloatingActionButton fab;
 
-    TextView permission_not_granted_tv, peek_song_name_tv;
+    TextView permission_not_granted_tv, peek_song_name_tv, songNameTv;
 
     LinearLayout main_layout, llBottomSheet, bottomBar;
 
@@ -75,8 +76,17 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
         peekPlayBtn = findViewById(R.id.peek_song_play_btn);
         fab = findViewById(R.id.fab_btn);
         seekBar = findViewById(R.id.song_seek_bar);
+        songNameTv = findViewById(R.id.song_text_tv);
 //        currentTimeTv = findViewById(R.id.current_time_tv);
 //        totalTimeTv = findViewById(R.id.total_time_tv);
+
+        songNameTv.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        songNameTv.setSingleLine();
+        songNameTv.setMarqueeRepeatLimit(10);
+        songNameTv.setFocusable(true);
+        songNameTv.setHorizontallyScrolling(true);
+        songNameTv.setFocusableInTouchMode(true);
+        songNameTv.requestFocus();
 
         bottomBar.setVisibility(View.VISIBLE);
         bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
@@ -195,10 +205,6 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
         }
     }
 
-    public void playMusicOnSongSelected(View view){
-
-    }
-
     @Override
     public void onSongClicked(final Song song) {
         Uri trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,song.getId());
@@ -223,6 +229,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
             }else{
                 peek_song_name_tv.setText(song.getSongName());
             }
+            songNameTv.setText(song.getSongName());
 //
             peekPlayBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -268,13 +275,14 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                 }
             });
 //
+            totalDuration = mediaPlayer.getDuration();
 //
-            seekBar.setMax(mediaPlayer.getDuration());
+            seekBar.setMax(totalDuration);
 //
             new Thread(){
                 public void run(){
                     songPosition=0;
-                    while (songPosition < mediaPlayer.getDuration()){
+                    while (songPosition < totalDuration){
                         try{
                             Thread.sleep(1000);
                         }catch (InterruptedException e){
@@ -306,7 +314,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                 @Override
                 public void onProgressChanged(SeekBar seekBar1, int i, boolean b) {
                     progressValue = i;
-                    if (i==mediaPlayer.getDuration()){
+                    if (i==totalDuration){
                         mediaPlayer.stop();
                         songIsPlaying = false;
                         songCompleted = true;
