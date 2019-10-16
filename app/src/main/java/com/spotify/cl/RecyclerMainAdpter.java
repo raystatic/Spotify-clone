@@ -17,6 +17,7 @@ public class RecyclerMainAdpter extends RecyclerView.Adapter<RecyclerMainAdpter.
     ArrayList<String> songs, artists;
     ArrayList<Song> songArrayList;
     SongInteractor listener;
+    int selectedPosition=-1;
 
     public RecyclerMainAdpter(Context context, ArrayList<Song> songArrayList, SongInteractor listener) {
         this.context = context;
@@ -32,7 +33,7 @@ public class RecyclerMainAdpter extends RecyclerView.Adapter<RecyclerMainAdpter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
 
         final Song song = songArrayList.get(position);
 
@@ -43,6 +44,7 @@ public class RecyclerMainAdpter extends RecyclerView.Adapter<RecyclerMainAdpter.
             @Override
             public void onClick(View view) {
                 listener.onSongClicked(song);
+                selectedPosition=position;
             }
         });
 

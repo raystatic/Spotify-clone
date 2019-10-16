@@ -20,6 +20,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -59,6 +60,10 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
 
     ImageButton peekPlayBtn;
 
+    Button playBtn;
+    Boolean PLAY_PLAYLIST = false;
+    private int CURRENT_SONG_INDEX = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,8 +82,11 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
         fab = findViewById(R.id.fab_btn);
         seekBar = findViewById(R.id.song_seek_bar);
         songNameTv = findViewById(R.id.song_text_tv);
+        playBtn = findViewById(R.id.play_btn_playlist);
 //        currentTimeTv = findViewById(R.id.current_time_tv);
 //        totalTimeTv = findViewById(R.id.total_time_tv);
+
+        PLAY_PLAYLIST = false;
 
         songNameTv.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         songNameTv.setSingleLine();
@@ -128,6 +136,16 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
 
         checkPermission();
 
+        playBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PLAY_PLAYLIST = true;
+                CURRENT_SONG_INDEX = 1;
+                onSongClicked(songArrayList.get(CURRENT_SONG_INDEX));
+                CURRENT_SONG_INDEX += 1;
+            }
+        });
+
     }
 
     public void checkPermission(){
@@ -166,6 +184,10 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
             }while (songCursor.moveToNext());
 
         }
+
+    }
+
+    private void playPlaylist(ArrayList<Song> songArrayList){
 
     }
 
@@ -274,7 +296,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                     }
                 }
             });
-//
+
             totalDuration = mediaPlayer.getDuration();
 //
             seekBar.setMax(totalDuration);
@@ -301,6 +323,13 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                             public void run() {
                                 seekBar.setProgress(songPosition);
                                 //                              currentTimeTv.setText(currentTime);
+                                if (songIsPlaying){
+                                    peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+                                    fab.setImageResource(R.drawable.ic_action_pause_black);
+                                }else if (songCompleted){
+                                    peekPlayBtn.setImageResource(R.drawable.ic_action_play);
+                                    fab.setImageResource(R.drawable.ic_action_play_black);
+                                }
                             }
                         });
                     }
@@ -318,6 +347,16 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                         mediaPlayer.stop();
                         songIsPlaying = false;
                         songCompleted = true;
+                        if (PLAY_PLAYLIST){
+                            Log.d("plylist","here");
+                            if (CURRENT_SONG_INDEX >1 && CURRENT_SONG_INDEX <songArrayList.size()){
+                                onSongClicked(songArrayList.get(CURRENT_SONG_INDEX));
+                                CURRENT_SONG_INDEX = CURRENT_SONG_INDEX + 1;
+                            }
+                            if (CURRENT_SONG_INDEX ==songArrayList.size()){
+                                CURRENT_SONG_INDEX = 0;
+                            }
+                        }
                         peekPlayBtn.setImageResource(R.drawable.ic_action_play);
                         fab.setImageResource(R.drawable.ic_action_play_black);
                     }
@@ -332,10 +371,13 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                 public void onStopTrackingTouch(SeekBar seekBar) {
                     mediaPlayer.seekTo(progressValue);
                     seekBar.setProgress(progressValue);
-                    //                currentTimeTv.setText(convertToMinutesAndSeconds(progressValue));
                     songPosition = progressValue;
                 }
             });
+
+
+            Log.d("plylist","here1"+songCompleted + " " + PLAY_PLAYLIST);
+
 
         }catch (Exception e){
             e.printStackTrace();
