@@ -5,18 +5,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:behavior_hideable="true"
-    app:behavior_peekHeight="80dp"
+    app:behavior_peekHeight="60dp"
     android:background="#000"
     android:id="@+id/bottom_sheet"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/colorAccent"
-        android:gravity="center"
-        android:text="abcdef"
-        android:textColor="@android:color/white" />
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="@color/light_black"
+        android:weightSum="2"
+        android:id="@+id/bottom_bar">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seedhe Pahad Se"
+                android:textColor="#fff"
+                android:maxLines="1"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:layout_centerInParent="true"
+                android:textStyle="bold"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5">
+
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_action_play"
+                android:background="@android:color/transparent"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"

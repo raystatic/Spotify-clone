@@ -17,6 +17,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -46,7 +47,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
 
     TextView permission_not_granted_tv;
 
-    LinearLayout main_layout, llBottomSheet;
+    LinearLayout main_layout, llBottomSheet, bottomBar;
 
     BottomSheetBehavior bottomSheetBehavior;
 
@@ -61,12 +62,45 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
         recyclerView = findViewById(R.id.main_rv);
         main_layout = findViewById(R.id.main_layout);
         llBottomSheet = findViewById(R.id.bottom_sheet);
+        bottomBar = findViewById(R.id.bottom_bar);
         permission_not_granted_tv = findViewById(R.id.permission_not_granted_tv);
         bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
 //        currentTimeTv = findViewById(R.id.current_time_tv);
 //        totalTimeTv = findViewById(R.id.total_time_tv);
 
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        bottomBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        });
+
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int i) {
+                if (bottomSheetBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED){
+                    bottomBar.setVisibility(View.GONE);
+                }else if (bottomSheetBehavior.getState()==BottomSheetBehavior.STATE_COLLAPSED){
+                    bottomBar.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+                if (v>=0.7){
+                    if (bottomBar.getVisibility()==View.VISIBLE){
+                        bottomBar.setVisibility(View.GONE);
+                    }
+                }
+                if (v<=0.3){
+                    if (bottomBar.getVisibility()==View.GONE){
+                        bottomBar.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+
         progressBar.setVisibility(View.VISIBLE);
         main_layout.setVisibility(View.GONE);
 
