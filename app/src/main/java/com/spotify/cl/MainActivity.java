@@ -211,7 +211,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
                         }catch (InterruptedException e){
                             e.printStackTrace();
                         }
-                        songPosition+=1000;
+                        if (songIsPlaying){
+                            songPosition+=1000;
+                        }
 //                        if (!convertToMinutesAndSeconds(songPosition).equals(convertToMinutesAndSeconds(mediaPlayer.getDuration()))){
 //
 //                        }
