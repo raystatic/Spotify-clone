@@ -16,7 +16,8 @@
         android:orientation="horizontal"
         android:background="@color/light_black"
         android:weightSum="2"
-        android:id="@+id/bottom_bar">
+        android:id="@+id/bottom_bar"
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -50,11 +51,133 @@
 
     </LinearLayout>
 
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="abcdef"
-        android:textColor="@android:color/white" />
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="2"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingTop="50dp"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        >
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingStart="50dp"
+                android:paddingEnd="50dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Spotify"
+                    android:textColor="#fff"
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/song_text_tv"/>
+
+                <androidx.appcompat.widget.AppCompatSeekBar
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/song_text_tv"
+                    android:layout_marginTop="10dp"
+                    android:thumbTint="#fff"
+                    android:id="@+id/song_seek_bar"
+                    android:theme="@style/SeekBarTheme"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/current_time_tv"
+                    android:text="0:00"
+                    android:textColor="#fff"
+                    android:visibility="gone"
+                    android:layout_below="@+id/song_seek_bar"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="30dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/total_time_tv"
+                    android:text="4:10"
+                    android:textColor="#fff"
+                    android:visibility="gone"
+                    android:layout_below="@+id/song_seek_bar"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="30dp"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/song_seek_bar"
+                    android:layout_marginTop="20dp">
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="#fff"
+                        android:layout_centerHorizontal="true"
+                        app:fabSize="auto"
+                        android:id="@+id/fab_btn"
+                        android:src="@drawable/ic_action_play_black"/>
+
+                    <ImageButton
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/ic_action_prev_white"
+                        android:background="@android:color/transparent"
+                        android:layout_toStartOf="@+id/fab_btn"
+                        />
+
+                    <ImageButton
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/ic_action_next_white"
+                        android:background="@android:color/transparent"
+                        android:layout_toEndOf="@+id/fab_btn"
+                        />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+
+
+
+
+
+
+    </RelativeLayout>
 
 </LinearLayout>

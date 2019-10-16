@@ -68,6 +68,8 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
 //        currentTimeTv = findViewById(R.id.current_time_tv);
 //        totalTimeTv = findViewById(R.id.total_time_tv);
 
+        bottomBar.setVisibility(View.VISIBLE);
+
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         bottomBar.setOnClickListener(new View.OnClickListener() {
             @Override
