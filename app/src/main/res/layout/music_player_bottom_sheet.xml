@@ -27,7 +27,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Seedhe Pahad Se"
+                android:text="Tap a song to play"
                 android:textColor="#fff"
                 android:maxLines="1"
                 android:id="@+id/peek_song_name_tv"
@@ -45,6 +45,7 @@
             <ImageButton
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:id="@+id/peek_song_play_btn"
                 android:src="@drawable/ic_action_play"
                 android:background="@android:color/transparent"/>
 
