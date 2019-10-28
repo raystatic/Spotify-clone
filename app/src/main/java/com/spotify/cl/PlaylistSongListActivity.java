@@ -16,6 +16,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,6 +34,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class PlaylistSongListActivity extends AppCompatActivity implements RecyclerMainAdpter.SongInteractor {
 
@@ -225,9 +228,6 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
 
     }
 
-    private void playPlaylist(ArrayList<Song> songArrayList){
-
-    }
 
     private void fetchSongs() {
         getMusic();
@@ -316,11 +316,25 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                 }
             });
 
+            totalDuration = mediaPlayer.getDuration();
+
+            seekBar.setMax(totalDuration);
+
+            final Handler mSeekbarUpdateHandler = new Handler();
+            final Runnable mUpdateSeekbar = new Runnable() {
+                @Override
+                public void run() {
+                    seekBar.setProgress(mediaPlayer.getCurrentPosition());
+                    mSeekbarUpdateHandler.postDelayed(this, 50);
+                }
+            };
+
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (songIsPlaying){
                         mediaPlayer.pause();
+                        mSeekbarUpdateHandler.removeCallbacks(mUpdateSeekbar);
                         songIsPlaying = false;
                         songCompleted = false;
                         peekPlayBtn.setImageResource(R.drawable.ic_action_play);
@@ -330,6 +344,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                             onSongClicked(song,position);
                         }else{
                             mediaPlayer.start();
+                            mSeekbarUpdateHandler.postDelayed(mUpdateSeekbar, 0);
                         }
                         songIsPlaying = true;
                         peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
@@ -338,40 +353,73 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                 }
             });
 
-            totalDuration = mediaPlayer.getDuration();
 
-            seekBar.setMax(totalDuration);
+            mSeekbarUpdateHandler.postDelayed(mUpdateSeekbar, 0);
 
-            new Thread(){
-                public void run(){
-                    songPosition=0;
-                    while (songPosition < totalDuration){
-                        try{
-                            Thread.sleep(1500);
-                        }catch (InterruptedException e){
-                            e.printStackTrace();
-                        }
-                        if (songIsPlaying){
-                            songPosition+=1000;
-                        }
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                seekBar.setProgress(songPosition);
-                                //                              currentTimeTv.setText(currentTime);
-                                if (songIsPlaying){
-                                    peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
-                                    fab.setImageResource(R.drawable.ic_action_pause_black);
-                                }else if (songCompleted){
-                                    peekPlayBtn.setImageResource(R.drawable.ic_action_play);
-                                    fab.setImageResource(R.drawable.ic_action_play_black);
-                                }
-                            }
-                        });
-                    }
-                }
-            }.start();
+//            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                @Override
+//                public void onPrepared(MediaPlayer mediaPlayer) {
+//                    final int duration = mediaPlayer.getDuration();
+//                    final int amountToupdate = duration / 100;
+//                    Timer mTimer = new Timer();
+//                    mTimer.schedule(new TimerTask() {
+//
+//                        @Override
+//                        public void run() {
+//                            runOnUiThread(new Runnable() {
+//
+//                                @Override
+//                                public void run() {
+//                                    if (!(amountToupdate * seekBar.getProgress() >= duration)) {
+//                                        int p = seekBar.getProgress();
+//                                        p += 1;
+//                                        seekBar.setProgress(p);
+//                                    }
+//                                    if (songIsPlaying){
+//                                        peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+//                                        fab.setImageResource(R.drawable.ic_action_pause_black);
+//                                    }else if (songCompleted){
+//                                        peekPlayBtn.setImageResource(R.drawable.ic_action_play);
+//                                        fab.setImageResource(R.drawable.ic_action_play_black);
+//                                    }
+//                                }
+//                            });
+//                        }
+//                    }, amountToupdate);
+//                }
+//            });
+
+//            new Thread(){
+//                public void run(){
+//                    songPosition=0;
+//                    while (songPosition < totalDuration){
+//                        try{
+//                            Thread.sleep(1500);
+//                        }catch (InterruptedException e){
+//                            e.printStackTrace();
+//                        }
+//                        if (songIsPlaying){
+//                            songPosition+=1000;
+//                        }
+//
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                seekBar.setProgress(songPosition);
+//                                //                              currentTimeTv.setText(currentTime);
+//                                if (songIsPlaying){
+//                                    peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+//                                    fab.setImageResource(R.drawable.ic_action_pause_black);
+//                                }else if (songCompleted){
+//                                    peekPlayBtn.setImageResource(R.drawable.ic_action_play);
+//                                    fab.setImageResource(R.drawable.ic_action_play_black);
+//                                }
+//                            }
+//                        });
+//                    }
+//                }
+//            }.start();
 
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -396,6 +444,12 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                         peekPlayBtn.setImageResource(R.drawable.ic_action_play);
                         fab.setImageResource(R.drawable.ic_action_play_black);
                     }
+
+                    if (b){
+                        mediaPlayer.seekTo(i);
+                        seekBar1.setProgress(i);
+                    }
+
                 }
 
                 @Override
