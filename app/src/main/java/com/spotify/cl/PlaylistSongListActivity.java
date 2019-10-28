@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,6 +57,8 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
 
     LinearLayout main_layout, llBottomSheet, bottomBar;
 
+    RelativeLayout topLevelRel;
+
     BottomSheetBehavior bottomSheetBehavior;
 
     ImageButton peekPlayBtn, prevBtn, nextBtn;
@@ -85,6 +88,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
         playBtn = findViewById(R.id.play_btn_playlist);
         prevBtn = findViewById(R.id.prev_song_btn);
         nextBtn = findViewById(R.id.next_song_btn);
+        topLevelRel = findViewById(R.id.top_level_rel);
 //        currentTimeTv = findViewById(R.id.current_time_tv);
 //        totalTimeTv = findViewById(R.id.total_time_tv);
 
@@ -113,8 +117,10 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
             public void onStateChanged(@NonNull View view, int i) {
                 if (bottomSheetBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED){
                     bottomBar.setVisibility(View.GONE);
+                    topLevelRel.setVisibility(View.GONE);
                 }else if (bottomSheetBehavior.getState()==BottomSheetBehavior.STATE_COLLAPSED){
                     bottomBar.setVisibility(View.VISIBLE);
+                    topLevelRel.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -123,11 +129,13 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                 if (v>=0.7){
                     if (bottomBar.getVisibility()==View.VISIBLE){
                         bottomBar.setVisibility(View.GONE);
+                        topLevelRel.setVisibility(View.GONE);
                     }
                 }
                 if (v<=0.3){
                     if (bottomBar.getVisibility()==View.GONE){
                         bottomBar.setVisibility(View.VISIBLE);
+                        topLevelRel.setVisibility(View.VISIBLE);
                     }
                 }
             }
