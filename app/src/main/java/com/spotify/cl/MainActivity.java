@@ -1,27 +1,36 @@
 package com.spotify.cl;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RemoteViews;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -175,6 +184,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
             songIsPlaying = true;
             fab.setImageResource(R.drawable.ic_action_pause);
             seekBar.setProgress(0);
+
+            NotificationHelper helper = new NotificationHelper(this);
+            helper.createNotification("This is the title","This is the body");
+
 //            String totalTime = convertToMinutesAndSeconds(mediaPlayer.getDuration());
 //            totalTimeTv.setText(totalTime);
             if (song.getSongName().length()>15){
@@ -268,6 +281,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerMainAdpte
         }
 
     }
+
 
     private String convertToMinutesAndSeconds(int duration) {
         long mins = ((duration / 1000) / 60);
