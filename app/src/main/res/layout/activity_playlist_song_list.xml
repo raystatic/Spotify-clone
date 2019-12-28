@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000"
+    android:orientation="vertical"
     tools:context=".PlaylistSongListActivity">
 
     <RelativeLayout
@@ -98,6 +99,6 @@
 
     </RelativeLayout>
 
-    <include layout="@layout/music_player_bottom_sheet"/>
+    <include layout="@layout/music_player_bottom_sheet" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
