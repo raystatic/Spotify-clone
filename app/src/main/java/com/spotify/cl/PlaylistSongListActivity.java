@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -70,6 +71,8 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
     Boolean PLAY_PLAYLIST = false;
     private int CURRENT_SONG_INDEX = 1;
 
+    ImageView slideDownArrow;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +95,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
         prevBtn = findViewById(R.id.prev_song_btn);
         nextBtn = findViewById(R.id.next_song_btn);
         topLevelRel = findViewById(R.id.top_level_rel);
+        slideDownArrow = findViewById(R.id.slideDownArrow);
 //        currentTimeTv = findViewById(R.id.current_time_tv);
 //        totalTimeTv = findViewById(R.id.total_time_tv);
 
@@ -140,6 +144,15 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                         bottomBar.setVisibility(View.VISIBLE);
                         topLevelRel.setVisibility(View.VISIBLE);
                     }
+                }
+            }
+        });
+
+        slideDownArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bottomSheetBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED){
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
             }
         });
