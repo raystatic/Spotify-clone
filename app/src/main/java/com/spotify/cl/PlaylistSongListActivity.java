@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.pm.PackageManager;
@@ -15,6 +17,7 @@ import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -72,6 +75,8 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
     private int CURRENT_SONG_INDEX = 1;
 
     ImageView slideDownArrow;
+
+    NotificationManager notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +167,10 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
 
         checkPermission();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            createChannel();
+        }
+
         playBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -200,6 +209,19 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
             }
         });
 
+    }
+
+    private void createChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel1 = new NotificationChannel(CreateNotification.CHANNEL_ID,
+                    "spotify",NotificationManager.IMPORTANCE_LOW);
+
+            notificationManager = getSystemService(NotificationManager.class);
+
+            if (notificationManager != null){
+                notificationManager.createNotificationChannel(channel1);
+            }
+        }
     }
 
     public void checkPermission(){
@@ -298,6 +320,10 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
             peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
             fab.setImageResource(R.drawable.ic_action_pause_black);
             seekBar.setProgress(0);
+
+            CreateNotification.createNotification(PlaylistSongListActivity.this,song,R.drawable.ic_action_pause_black,
+                    1,songArrayList.size()-1);
+
 //            String totalTime = convertToMinutesAndSeconds(mediaPlayer.getDuration());
 //            totalTimeTv.setText(totalTime);
             if (song.getSongName().length()>30){
