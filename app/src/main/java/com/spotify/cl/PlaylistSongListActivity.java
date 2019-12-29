@@ -388,14 +388,12 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                         mediaPlayer.stop();
                         songIsPlaying = false;
                         songCompleted = true;
-                        if (PLAY_PLAYLIST){
-                            if (CURRENT_SONG_INDEX >0 && CURRENT_SONG_INDEX <songArrayList.size()){
-                                CURRENT_SONG_INDEX = CURRENT_SONG_INDEX + 1;
-                                onSongClicked(songArrayList.get(CURRENT_SONG_INDEX),CURRENT_SONG_INDEX);
-                            }
-                            if (CURRENT_SONG_INDEX ==songArrayList.size()){
-                                CURRENT_SONG_INDEX = 0;
-                            }
+                        if (CURRENT_SONG_INDEX >0 && CURRENT_SONG_INDEX <songArrayList.size()){
+                            CURRENT_SONG_INDEX = CURRENT_SONG_INDEX + 1;
+                            onSongClicked(songArrayList.get(CURRENT_SONG_INDEX),CURRENT_SONG_INDEX);
+                        }
+                        if (CURRENT_SONG_INDEX ==songArrayList.size()){
+                            CURRENT_SONG_INDEX = 0;
                         }
                         peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
                         fab.setImageResource(R.drawable.ic_action_pause_black);
