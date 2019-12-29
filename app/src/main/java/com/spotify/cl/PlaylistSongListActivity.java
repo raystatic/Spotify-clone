@@ -112,8 +112,6 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
         nextBtn = findViewById(R.id.next_song_btn);
         topLevelRel = findViewById(R.id.top_level_rel);
         slideDownArrow = findViewById(R.id.slideDownArrow);
-//        currentTimeTv = findViewById(R.id.current_time_tv);
-//        totalTimeTv = findViewById(R.id.total_time_tv);
 
         PLAY_PLAYLIST = false;
 
@@ -204,14 +202,6 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                PLAY_PLAYLIST = true;
-//                CURRENT_SONG_INDEX +=1;
-//                if (CURRENT_SONG_INDEX<songArrayList.size()){
-//                    onSongClicked(songArrayList.get(CURRENT_SONG_INDEX),CURRENT_SONG_INDEX);
-//                }else{
-//                    CURRENT_SONG_INDEX = 0;
-//                    onSongClicked(songArrayList.get(CURRENT_SONG_INDEX),CURRENT_SONG_INDEX);
-//                }
                 onTrackNext();
             }
         });
@@ -219,14 +209,6 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
         prevBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                PLAY_PLAYLIST = true;
-//                CURRENT_SONG_INDEX -=1;
-//                if (CURRENT_SONG_INDEX>=0){
-//                    onSongClicked(songArrayList.get(CURRENT_SONG_INDEX),CURRENT_SONG_INDEX);
-//                }else{
-//                    CURRENT_SONG_INDEX = songArrayList.size()-1;
-//                    onSongClicked(songArrayList.get(CURRENT_SONG_INDEX),CURRENT_SONG_INDEX);
-//                }
                 onTrackPrevious();
             }
         });
@@ -379,7 +361,6 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
 
             seekBar.setMax(totalDuration);
 
-         //   final Handler mSeekbarUpdateHandler = new Handler();
             mUpdateSeekbar = new Runnable() {
                 @Override
                 public void run() {
@@ -392,27 +373,10 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                 @Override
                 public void onClick(View view) {
                     if (songIsPlaying){
-//                        mediaPlayer.pause();
-//                        mSeekbarUpdateHandler.removeCallbacks(mUpdateSeekbar);
-//                        songIsPlaying = false;
-//                        songCompleted = false;
-//                        peekPlayBtn.setImageResource(R.drawable.ic_action_play);
-//                        fab.setImageResource(R.drawable.ic_action_play_black);
                         onTrackPause();
 
                     }else{
-//                        if (songCompleted){
-//                            onSongClicked(song,position);
-//                        }else{
-//                            mediaPlayer.start();
-//                            mSeekbarUpdateHandler.postDelayed(mUpdateSeekbar, 0);
-//                        }
-//                        songIsPlaying = true;
-//                        peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
-//                        fab.setImageResource(R.drawable.ic_action_pause_black);
-
                         onTrackPlay();
-
                     }
                 }
             });
@@ -496,7 +460,6 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
 
     @Override
     public void onTrackPrevious() {
-     //   position--;
         PLAY_PLAYLIST = true;
         CURRENT_SONG_INDEX -=1;
         if (CURRENT_SONG_INDEX>=0){
@@ -530,8 +493,6 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
     @Override
     public void onTrackPause() {
 
-        isPlaying = false;
-
         mediaPlayer.pause();
         mSeekbarUpdateHandler.removeCallbacks(mUpdateSeekbar);
         songIsPlaying = false;
@@ -545,7 +506,6 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
 
     @Override
     public void onTrackNext() {
-     //   position++;
         PLAY_PLAYLIST = true;
         CURRENT_SONG_INDEX +=1;
         if (CURRENT_SONG_INDEX<songArrayList.size()){
