@@ -186,16 +186,9 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
             @Override
             public void onClick(View view) {
                 PLAY_PLAYLIST = true;
-                CURRENT_SONG_INDEX = 1;
+                CURRENT_SONG_INDEX = 0;
                 onSongClicked(songArrayList.get(CURRENT_SONG_INDEX), CURRENT_SONG_INDEX);
                 CURRENT_SONG_INDEX += 1;
-
-                if (isPlaying){
-                    onTrackPause();
-                }else{
-                    onTrackPlay();
-                }
-
             }
         });
 
@@ -326,7 +319,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
             seekBar.setProgress(0);
 
             CreateNotification.createNotification(PlaylistSongListActivity.this,song,R.drawable.ic_action_pause_black,
-                    1,songArrayList.size()-1);
+                    CURRENT_SONG_INDEX,songArrayList.size()-1);
 
             if (song.getSongName().length()>30){
                 peek_song_name_tv.setText(song.getSongName().substring(0,30)+"...");
@@ -396,16 +389,18 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                         songIsPlaying = false;
                         songCompleted = true;
                         if (PLAY_PLAYLIST){
-                            if (CURRENT_SONG_INDEX >1 && CURRENT_SONG_INDEX <songArrayList.size()){
-                                onSongClicked(songArrayList.get(CURRENT_SONG_INDEX),CURRENT_SONG_INDEX);
+                            if (CURRENT_SONG_INDEX >0 && CURRENT_SONG_INDEX <songArrayList.size()){
                                 CURRENT_SONG_INDEX = CURRENT_SONG_INDEX + 1;
+                                onSongClicked(songArrayList.get(CURRENT_SONG_INDEX),CURRENT_SONG_INDEX);
                             }
                             if (CURRENT_SONG_INDEX ==songArrayList.size()){
                                 CURRENT_SONG_INDEX = 0;
                             }
                         }
-                        peekPlayBtn.setImageResource(R.drawable.ic_action_play);
-                        fab.setImageResource(R.drawable.ic_action_play_black);
+                        peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+                        fab.setImageResource(R.drawable.ic_action_pause_black);
+                        CreateNotification.createNotification(PlaylistSongListActivity.this,songArrayList.get(CURRENT_SONG_INDEX),R.drawable.ic_action_pause_black,
+                                CURRENT_SONG_INDEX,songArrayList.size()-1);
                     }
 
                     if (b){
