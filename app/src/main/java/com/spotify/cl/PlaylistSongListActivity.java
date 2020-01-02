@@ -332,20 +332,22 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                 @Override
                 public void onClick(View view) {
                     if (songIsPlaying){
-                        mediaPlayer.pause();
-                        songIsPlaying = false;
-                        songCompleted = false;
-                        peekPlayBtn.setImageResource(R.drawable.ic_action_play);
-                        fab.setImageResource(R.drawable.ic_action_play_black);
+//                        mediaPlayer.pause();
+//                        songIsPlaying = false;
+//                        songCompleted = false;
+//                        peekPlayBtn.setImageResource(R.drawable.ic_action_play);
+//                        fab.setImageResource(R.drawable.ic_action_play_black);
+                        onTrackPause();
                     }else{
-                        if (songCompleted){
-                            onSongClicked(song,position);
-                        }else{
-                            mediaPlayer.start();
-                        }
-                        songIsPlaying = true;
-                        peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
-                        fab.setImageResource(R.drawable.ic_action_pause_black);
+//                        if (songCompleted){
+//                            onSongClicked(song,position);
+//                        }else{
+//                            mediaPlayer.start();
+//                        }
+//                        songIsPlaying = true;
+//                        peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+//                        fab.setImageResource(R.drawable.ic_action_pause_black);
+                        onTrackPlay();
                     }
                 }
             });
@@ -476,6 +478,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
         }
         songIsPlaying = true;
         peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+        peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
         fab.setImageResource(R.drawable.ic_action_pause_black);
 
         CreateNotification.createNotification(PlaylistSongListActivity.this,songArrayList.get(CURRENT_SONG_INDEX),R.drawable.ic_action_pause_black,
@@ -492,6 +495,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
         songCompleted = false;
         peekPlayBtn.setImageResource(R.drawable.ic_action_play);
         fab.setImageResource(R.drawable.ic_action_play_black);
+        peekPlayBtn.setImageResource(R.drawable.ic_action_play);
 
         CreateNotification.createNotification(PlaylistSongListActivity.this,songArrayList.get(CURRENT_SONG_INDEX),R.drawable.ic_action_play_black,
                 CURRENT_SONG_INDEX,songArrayList.size()-1);
