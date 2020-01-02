@@ -228,37 +228,13 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
             @Override
             public void onClick(View view) {
                 if (songIsPlaying){
-//                        mediaPlayer.pause();
-//                        songIsPlaying = false;
-//                        songCompleted = false;
-//                        peekPlayBtn.setImageResource(R.drawable.ic_action_play);
-//                        fab.setImageResource(R.drawable.ic_action_play_black);
-                   // onSongClicked(songArrayList.get(resumedSongIndex),resumedSongIndex);
-
                     onTrackPause();
-
-//                    if (mediaPlayer!=null){
-//                        onTrackPause();
-//                    }
-
                 }else{
-//                        if (songCompleted){
-//                            onSongClicked(song,position);
-//                        }else{
-//                            mediaPlayer.start();
-//                        }
-//                        songIsPlaying = true;
-//                        peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
-//                        fab.setImageResource(R.drawable.ic_action_pause_black);
-                   /// onTrackPlay();
-                   // onSongClicked(songArrayList.get(resumedSongIndex),resumedSongIndex);
-
                     if (SONGPLAYED){
                         onTrackPlay();
                     }else{
                         onSongClicked(songArrayList.get(resumedSongIndex),resumedSongIndex);
                     }
-
                 }
             }
         });
