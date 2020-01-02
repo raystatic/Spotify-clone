@@ -41,6 +41,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spotify.cl.services.OnClearFromRecentService;
+import com.spotify.cl.utility.PrefManager;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -89,12 +90,17 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
     Handler mSeekbarUpdateHandler = new Handler();
     Runnable mUpdateSeekbar;
 
+    PrefManager prefManager;
+
+    boolean SONGPLAYED = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist_song_list);
 
         songArrayList = new ArrayList<>();
+        prefManager = new PrefManager(PlaylistSongListActivity.this);
 
         progressBar = findViewById(R.id.main_progress);
         recyclerView = findViewById(R.id.main_rv);
@@ -206,6 +212,73 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
             }
         });
 
+        final int resumedSongIndex = prefManager.getInt(PrefManager.RECENT_SONG_INDEX);
+        if (resumedSongIndex!=-1){
+            peek_song_name_tv.setText(songArrayList.get(resumedSongIndex).getSongName());
+            songNameTv.setText(songArrayList.get(resumedSongIndex).getSongName());
+        }
+
+        if (mediaPlayer!=null){
+            mediaPlayer.release();
+        }
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+        peekPlayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (songIsPlaying){
+//                        mediaPlayer.pause();
+//                        songIsPlaying = false;
+//                        songCompleted = false;
+//                        peekPlayBtn.setImageResource(R.drawable.ic_action_play);
+//                        fab.setImageResource(R.drawable.ic_action_play_black);
+                   // onSongClicked(songArrayList.get(resumedSongIndex),resumedSongIndex);
+
+                    onTrackPause();
+
+//                    if (mediaPlayer!=null){
+//                        onTrackPause();
+//                    }
+
+                }else{
+//                        if (songCompleted){
+//                            onSongClicked(song,position);
+//                        }else{
+//                            mediaPlayer.start();
+//                        }
+//                        songIsPlaying = true;
+//                        peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+//                        fab.setImageResource(R.drawable.ic_action_pause_black);
+                   /// onTrackPlay();
+                   // onSongClicked(songArrayList.get(resumedSongIndex),resumedSongIndex);
+
+                    if (SONGPLAYED){
+                        onTrackPlay();
+                    }else{
+                        onSongClicked(songArrayList.get(resumedSongIndex),resumedSongIndex);
+                    }
+
+                }
+            }
+        });
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (songIsPlaying){
+                    onTrackPause();
+                }else{
+                    if (SONGPLAYED){
+                        onTrackPlay();
+                    }else{
+                        onSongClicked(songArrayList.get(resumedSongIndex),resumedSongIndex);
+                    }
+                }
+            }
+        });
+
+
     }
 
     private void createChannel() {
@@ -301,18 +374,15 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
     public void onSongClicked(final Song song, final int position) {
 
         CURRENT_SONG_INDEX = position;
+        prefManager.saveInt(PrefManager.RECENT_SONG_INDEX,position);
 
         Uri trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,song.getId());
 
-        if (mediaPlayer!=null){
-            mediaPlayer.release();
-        }
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try{
             mediaPlayer.setDataSource(PlaylistSongListActivity.this,trackUri);
             mediaPlayer.prepare();
             mediaPlayer.start();
+            SONGPLAYED = true;
             songIsPlaying = true;
             peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
             fab.setImageResource(R.drawable.ic_action_pause_black);
@@ -328,29 +398,7 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
             }
             songNameTv.setText(song.getSongName());
 
-            peekPlayBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (songIsPlaying){
-//                        mediaPlayer.pause();
-//                        songIsPlaying = false;
-//                        songCompleted = false;
-//                        peekPlayBtn.setImageResource(R.drawable.ic_action_play);
-//                        fab.setImageResource(R.drawable.ic_action_play_black);
-                        onTrackPause();
-                    }else{
-//                        if (songCompleted){
-//                            onSongClicked(song,position);
-//                        }else{
-//                            mediaPlayer.start();
-//                        }
-//                        songIsPlaying = true;
-//                        peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
-//                        fab.setImageResource(R.drawable.ic_action_pause_black);
-                        onTrackPlay();
-                    }
-                }
-            });
+
 
             totalDuration = mediaPlayer.getDuration();
 
@@ -363,19 +411,6 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
                     mSeekbarUpdateHandler.postDelayed(this, 50);
                 }
             };
-
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (songIsPlaying){
-                        onTrackPause();
-
-                    }else{
-                        onTrackPlay();
-                    }
-                }
-            });
-
 
             mSeekbarUpdateHandler.postDelayed(mUpdateSeekbar, 0);
 
