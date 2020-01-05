@@ -181,6 +181,15 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         }
     }
 
+    public void seekToMedia(int i){
+        if (mediaPlayer!=null)
+            mediaPlayer.seekTo(i);
+    }
+
+    public int getMediaTotalDuration(){
+        return mediaPlayer.getDuration();
+    }
+
     public boolean isMediaCompleted(){
         return mediaPlayer.getCurrentPosition()>=mediaPlayer.getDuration();
     }
@@ -199,7 +208,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
 
     public int getMediaCurrentPosition(){
-        return resumePosition;
+        return mediaPlayer.getCurrentPosition();
     }
 
 

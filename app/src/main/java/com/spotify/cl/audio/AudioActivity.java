@@ -25,6 +25,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -39,6 +40,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spotify.cl.CreateNotification;
+import com.spotify.cl.PlaylistSongListActivity;
 import com.spotify.cl.R;
 import com.spotify.cl.services.OnClearFromRecentService;
 
@@ -211,6 +213,7 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
     }
 
     private void updateButtons(){
+        Log.d("mediadebug","updatebuttons");
         if (player.getMediaIsPlaying()){
             peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
             fab.setImageResource(R.drawable.ic_action_pause_black);
@@ -295,7 +298,17 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
         fab.setImageResource(R.drawable.ic_action_pause_black);
 
+        if (song.getTitle().length()>30){
+            peek_song_name_tv.setText(song.getTitle().substring(0,30)+"...");
+        }else{
+            peek_song_name_tv.setText(song.getTitle());
+        }
+        songNameTv.setText(song.getTitle());
 
+        seekBar.setProgress(0);
+
+
+        //handle seekbar
 
     }
 
@@ -309,6 +322,8 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             serviceBound = true;
 
             Toast.makeText(AudioActivity.this, "Service Bound", Toast.LENGTH_SHORT).show();
+            updateButtons();
+            initSeekBar();
         }
 
         @Override
@@ -316,6 +331,53 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             serviceBound = false;
         }
     };
+
+    private void initSeekBar() {
+        Log.d("mediadebug","seekbar");
+        seekBar.setMax(player.getMediaTotalDuration());
+
+        mUpdateSeekbar = new Runnable() {
+            @Override
+            public void run() {
+                seekBar.setProgress(player.getMediaCurrentPosition());
+                mSeekbarUpdateHandler.postDelayed(this, 100);
+            }
+        };
+
+        mSeekbarUpdateHandler.postDelayed(mUpdateSeekbar, 0);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            int progressValue = 0;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar1, int i, boolean b) {
+                progressValue = i;
+                if (i==player.getMediaTotalDuration()){
+                    player.stopMedia();
+                    peekPlayBtn.setImageResource(R.drawable.ic_action_play);
+                    fab.setImageResource(R.drawable.ic_action_play_black);
+                }
+
+                if (b){
+                    player.seekToMedia(i);
+                    seekBar1.setProgress(i);
+                }
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                player.seekToMedia(progressValue);
+                seekBar.setProgress(progressValue);
+            }
+        });
+    }
 
     private void playAudio(int audioIndex) {
         //Check is service is active
