@@ -161,31 +161,45 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     }
 
-    private void playMedia(){
+    public void playMedia(){
         if (!mediaPlayer.isPlaying()){
             mediaPlayer.start();
         }
     }
 
-    private void stopMedia(){
+    public void stopMedia(){
         if (mediaPlayer == null) return;
         if (mediaPlayer.isPlaying()){
             mediaPlayer.stop();
         }
     }
 
-    private void pauseMedia(){
+    public void pauseMedia(){
         if (mediaPlayer.isPlaying()){
             mediaPlayer.pause();
             resumePosition = mediaPlayer.getCurrentPosition();
         }
     }
 
-    private void resumeMedia(){
+    public boolean isMediaCompleted(){
+        return mediaPlayer.getCurrentPosition()>=mediaPlayer.getDuration();
+    }
+
+    public void resumeMedia(){
         if (!mediaPlayer.isPlaying()){
             mediaPlayer.seekTo(resumePosition);
             mediaPlayer.start();
         }
+    }
+
+    public boolean getMediaIsPlaying(){
+        if (mediaPlayer != null)
+            return mediaPlayer.isPlaying();
+        return false;
+    }
+
+    public int getMediaCurrentPosition(){
+        return resumePosition;
     }
 
 

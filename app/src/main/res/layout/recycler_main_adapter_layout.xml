@@ -21,6 +21,7 @@
                 android:layout_height="wrap_content"
                 android:text="Kohinoor"
                 android:maxLines="1"
+                android:textSize="16sp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:marqueeRepeatLimit="marquee_forever"

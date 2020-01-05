@@ -175,6 +175,32 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             createChannel();
         }
 
+        peekPlayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (player.getMediaIsPlaying()){
+                    player.pauseMedia();
+                    updateButtons();
+                }else{
+                    player.playMedia();
+                    updateButtons();
+                }
+            }
+        });
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (player.getMediaIsPlaying()){
+                    player.pauseMedia();
+                    updateButtons();
+                }else{
+                    player.playMedia();
+                    updateButtons();
+                }
+            }
+        });
+
     //    loadAudio();
 //        playAudio("https://upload.wikimedia.org/wikipedia/commons/6/6c/Grieg_Lyric_Pieces_Kobold.ogg");
 
@@ -182,6 +208,16 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
        // playAudio();
 
+    }
+
+    private void updateButtons(){
+        if (player.getMediaIsPlaying()){
+            peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+            fab.setImageResource(R.drawable.ic_action_pause_black);
+        }else{
+            peekPlayBtn.setImageResource(R.drawable.ic_action_play);
+            fab.setImageResource(R.drawable.ic_action_play_black);
+        }
     }
 
     private void createChannel() {
@@ -255,6 +291,12 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
     public void onSongPlayed(Audio song, int position) {
         CURRENT_SONG_INDEX = position;
         playAudio(CURRENT_SONG_INDEX);
+
+        peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+        fab.setImageResource(R.drawable.ic_action_pause_black);
+
+
+
     }
 
     //Binding this Client to the AudioPlayer Service
