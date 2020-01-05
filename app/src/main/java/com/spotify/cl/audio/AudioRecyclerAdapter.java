@@ -48,8 +48,15 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
             public void onClick(View view) {
                 listener.onSongPlayed(song, position);
                 selectedPosition=position;
+                notifyDataSetChanged();
             }
         });
+
+        if (selectedPosition==position){
+            holder.songname.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+        }else{
+            holder.songname.setTextColor(context.getResources().getColor(R.color.white));
+        }
 
     }
 
