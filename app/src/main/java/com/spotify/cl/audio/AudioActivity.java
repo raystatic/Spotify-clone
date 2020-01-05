@@ -8,14 +8,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -34,13 +38,16 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.spotify.cl.CreateNotification;
 import com.spotify.cl.R;
+import com.spotify.cl.services.OnClearFromRecentService;
 
 import java.util.ArrayList;
 
 public class AudioActivity extends AppCompatActivity implements AudioRecyclerAdapter.SongInteractor {
 
     private static final int PERMISSION_REQUEST = 1;
+    public static final String Broadcast_PLAY_NEW_AUDIO = "com.spotify.cl.PlayNewAudio";
 
     private MediaPlayerService player;
     boolean serviceBound = false;
@@ -73,11 +80,16 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
     private int CURRENT_SONG_INDEX = 1;
 
+    StorageUtil storage;
+
+    NotificationManager notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio);
+
+        storage = new StorageUtil(getApplicationContext());
 
         progressBar = findViewById(R.id.main_progress);
         recyclerView = findViewById(R.id.main_rv);
@@ -159,6 +171,10 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
         checkPermission();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createChannel();
+        }
+
     //    loadAudio();
 //        playAudio("https://upload.wikimedia.org/wikipedia/commons/6/6c/Grieg_Lyric_Pieces_Kobold.ogg");
 
@@ -166,6 +182,19 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
        // playAudio();
 
+    }
+
+    private void createChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel1 = new NotificationChannel(MediaPlayerService.CHANNEL_ID,
+                    "spotify",NotificationManager.IMPORTANCE_LOW);
+
+            notificationManager = getSystemService(NotificationManager.class);
+
+            if (notificationManager != null){
+                notificationManager.createNotificationChannel(channel1);
+            }
+        }
     }
 
 
@@ -225,7 +254,7 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
     @Override
     public void onSongPlayed(Audio song, int position) {
         CURRENT_SONG_INDEX = position;
-        playAudio(song.getData());
+        playAudio(CURRENT_SONG_INDEX);
     }
 
     //Binding this Client to the AudioPlayer Service
@@ -246,17 +275,21 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         }
     };
 
-    private void playAudio(String media) {
+    private void playAudio(int audioIndex) {
         //Check is service is active
         if (!serviceBound) {
+            storage.storeAudio(audioList);
+            storage.storeAudioIndex(audioIndex);
+
             Intent playerIntent = new Intent(this, MediaPlayerService.class);
-            playerIntent.putExtra("media", media);
             startService(playerIntent);
             bindService(playerIntent, serviceConnection, Context.BIND_AUTO_CREATE);
         } else {
             //Service is active
-            //Send media with BroadcastReceiver
-            Toast.makeText(AudioActivity.this, "Service is Active", Toast.LENGTH_SHORT).show();
+            //Send a broadcast to the service -> PLAY_NEW_AUDIO
+            storage.storeAudioIndex(audioIndex);
+            Intent broadcastIntent = new Intent(Broadcast_PLAY_NEW_AUDIO);
+            sendBroadcast(broadcastIntent);
         }
     }
 
@@ -298,6 +331,11 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            notificationManager.cancelAll();
+        }
+
         if (serviceBound) {
             unbindService(serviceConnection);
             //service is active
