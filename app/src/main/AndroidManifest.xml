@@ -3,6 +3,16 @@
     xmlns:dist="http://schemas.android.com/apk/distribution"
     package="com.spotify.cl">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <dist:module dist:instant="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,7 +20,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PlaylistSongListActivity"></activity>
+        <activity android:name=".audio.AudioActivity"></activity>
+        <activity android:name=".PlaylistSongListActivity" />
         <activity
             android:name=".SplashActivity"
             android:theme="@style/Theme.Transparent">
@@ -20,19 +31,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
 
-        <receiver android:name=".services.NotificationActionService"/>
-        <service android:name=".services.OnClearFromRecentService"/>
+        <receiver android:name=".services.NotificationActionService" />
+
+        <service android:name=".services.OnClearFromRecentService" />
+        <service android:name=".audio.MediaPlayerService" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <dist:module dist:instant="true" />
 
 </manifest>

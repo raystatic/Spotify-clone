@@ -11,11 +11,13 @@ import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.AudioManager;
@@ -24,9 +26,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -40,12 +42,11 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.spotify.cl.audio.MediaPlayerService;
 import com.spotify.cl.services.OnClearFromRecentService;
 import com.spotify.cl.utility.PrefManager;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class PlaylistSongListActivity extends AppCompatActivity implements RecyclerMainAdpter.SongInteractor, Playable {
 
@@ -93,6 +94,12 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
     PrefManager prefManager;
 
     boolean SONGPLAYED = false;
+
+
+
+
+    private MediaPlayerService playerService;
+    boolean serviceBound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -346,6 +353,13 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
         }
     }
 
+
+    @Override
+    public void onSongPlayed(Song song, int position) {
+        Uri trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,song.getId());
+        playAudio(trackUri.getPath());
+    }
+
     @Override
     public void onSongClicked(final Song song, final int position) {
 
@@ -533,7 +547,55 @@ public class PlaylistSongListActivity extends AppCompatActivity implements Recyc
             notificationManager.cancelAll();
         }
 
+        if (serviceBound){
+            unbindService(serviceConnection);
+            playerService.stopSelf();
+        }
+
         unregisterReceiver(broadcastReceiver);
 
+    }
+
+
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;
+            playerService =binder.getService();
+            serviceBound = true;
+
+            Toast.makeText(PlaylistSongListActivity.this,"Service Bound",Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            serviceBound = false;
+        }
+    };
+
+    private void playAudio(String media){
+        if (!serviceBound){
+            Intent playerIntent = new Intent(this,MediaPlayerService.class);
+            playerIntent.putExtra("media",media);
+            startService(playerIntent);
+            bindService(playerIntent,serviceConnection,Context.BIND_AUTO_CREATE);
+        }else{
+            Toast.makeText(PlaylistSongListActivity.this,"Service is active", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean("ServiceState",serviceBound);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        serviceBound = savedInstanceState.getBoolean("ServiceState");
     }
 }

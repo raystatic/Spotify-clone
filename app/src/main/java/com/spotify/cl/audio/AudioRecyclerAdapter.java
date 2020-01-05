@@ -1,7 +1,6 @@
-package com.spotify.cl;
+package com.spotify.cl.audio;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,17 +9,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.spotify.cl.R;
+import com.spotify.cl.RecyclerMainAdpter;
+
 import java.util.ArrayList;
 
-public class RecyclerMainAdpter extends RecyclerView.Adapter<RecyclerMainAdpter.MyViewHolder> {
+public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdapter.MyViewHolder> {
 
     Context context;
     ArrayList<String> songs, artists;
-    ArrayList<Song> songArrayList;
+    ArrayList<Audio> songArrayList;
     SongInteractor listener;
     int selectedPosition=-1;
 
-    public RecyclerMainAdpter(Context context, ArrayList<Song> songArrayList, SongInteractor listener) {
+    public AudioRecyclerAdapter(Context context, ArrayList<Audio> songArrayList, SongInteractor listener) {
         this.context = context;
         this.songArrayList = songArrayList;
         this.listener = listener;
@@ -34,12 +36,12 @@ public class RecyclerMainAdpter extends RecyclerView.Adapter<RecyclerMainAdpter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final AudioRecyclerAdapter.MyViewHolder holder, final int position) {
 
-        final Song song = songArrayList.get(position);
+        final Audio song = songArrayList.get(position);
 
-        holder.songname.setText(song.songName);
-        holder.artistname.setText(song.artistName);
+        holder.songname.setText(song.getTitle());
+        holder.artistname.setText(song.getArtist());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,8 +70,8 @@ public class RecyclerMainAdpter extends RecyclerView.Adapter<RecyclerMainAdpter.
     }
 
     public interface SongInteractor{
-        void onSongClicked(Song song, int position);
-        void onSongPlayed(Song song, int position);
+        //void onSongClicked(Audio song, int position);
+        void onSongPlayed(Audio song, int position);
     }
 
 }
