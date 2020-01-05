@@ -203,6 +203,28 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             }
         });
 
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                player.skipToNext();
+                peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+                songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+                peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+                fab.setImageResource(R.drawable.ic_action_pause_black);
+            }
+        });
+
+        prevBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                player.skipToPrevious();
+                peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+                songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+                peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+                fab.setImageResource(R.drawable.ic_action_pause_black);
+            }
+        });
+
     //    loadAudio();
 //        playAudio("https://upload.wikimedia.org/wikipedia/commons/6/6c/Grieg_Lyric_Pieces_Kobold.ogg");
 
@@ -334,13 +356,16 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
     private void initSeekBar() {
         Log.d("mediadebug","seekbar");
+
         seekBar.setMax(player.getMediaTotalDuration());
+
+        Log.d("mediadebug","totalduration : "+player.getMediaTotalDuration());
 
         mUpdateSeekbar = new Runnable() {
             @Override
             public void run() {
                 seekBar.setProgress(player.getMediaCurrentPosition());
-                mSeekbarUpdateHandler.postDelayed(this, 100);
+                mSeekbarUpdateHandler.postDelayed(this, 50);
             }
         };
 
@@ -394,6 +419,7 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             storage.storeAudioIndex(audioIndex);
             Intent broadcastIntent = new Intent(Broadcast_PLAY_NEW_AUDIO);
             sendBroadcast(broadcastIntent);
+            initSeekBar();
         }
     }
 
