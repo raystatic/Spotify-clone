@@ -485,4 +485,38 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
     public void onMediaPrepared() {
         initSeekBar();
     }
+
+    @Override
+    public void onPlayed() {
+        peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+        fab.setImageResource(R.drawable.ic_action_pause_black);
+    }
+
+    @Override
+    public void onPaused() {
+        peekPlayBtn.setImageResource(R.drawable.ic_action_play);
+        fab.setImageResource(R.drawable.ic_action_play_black);
+    }
+
+    @Override
+    public void onStopped() {
+        peekPlayBtn.setImageResource(R.drawable.ic_action_play);
+        fab.setImageResource(R.drawable.ic_action_play_black);
+    }
+
+    @Override
+    public void onSkipToNext() {
+        adapter.selectedPosition = storage.loadAudioIndex();
+        adapter.notifyDataSetChanged();
+        songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+        peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+    }
+
+    @Override
+    public void onSkipToPrevious() {
+        adapter.selectedPosition = storage.loadAudioIndex();
+        adapter.notifyDataSetChanged();
+        songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+        peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+    }
 }

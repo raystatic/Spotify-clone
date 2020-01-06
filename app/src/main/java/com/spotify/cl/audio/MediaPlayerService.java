@@ -642,14 +642,19 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         String actionString = playbackAction.getAction();
         if (actionString.equalsIgnoreCase(ACTION_PLAY)) {
             transportControls.play();
+            audioInteractor.onPlayed();
         } else if (actionString.equalsIgnoreCase(ACTION_PAUSE)) {
             transportControls.pause();
+            audioInteractor.onPaused();
         } else if (actionString.equalsIgnoreCase(ACTION_NEXT)) {
             transportControls.skipToNext();
+            audioInteractor.onSkipToNext();
         } else if (actionString.equalsIgnoreCase(ACTION_PREVIOUS)) {
             transportControls.skipToPrevious();
+            audioInteractor.onSkipToPrevious();
         } else if (actionString.equalsIgnoreCase(ACTION_STOP)) {
             transportControls.stop();
+            audioInteractor.onStopped();
         }
     }
 
