@@ -167,6 +167,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public void playMedia(){
         if (!mediaPlayer.isPlaying()){
             mediaPlayer.start();
+            buildNotification(PlaybackStatus.PLAYING);
         }
     }
 
@@ -180,6 +181,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public void pauseMedia(){
         if (mediaPlayer.isPlaying()){
             mediaPlayer.pause();
+            buildNotification(PlaybackStatus.PAUSED);
             resumePosition = mediaPlayer.getCurrentPosition();
         }
     }
@@ -201,6 +203,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         if (!mediaPlayer.isPlaying()){
             mediaPlayer.seekTo(resumePosition);
             mediaPlayer.start();
+            buildNotification(PlaybackStatus.PLAYING);
         }
     }
 
@@ -280,6 +283,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public void onPrepared(MediaPlayer mp) {
         //Invoked when the media source is ready for playback.\
         playMedia();
+        buildNotification(PlaybackStatus.PLAYING);
 
         Log.d("mediadebug","onprepared called");
         Log.d("mediadebug","audiointeractor"+audioInteractor);
@@ -295,7 +299,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         switch (focusChange){
             case AudioManager.AUDIOFOCUS_GAIN:
                 if (mediaPlayer==null) initMediaPlayer();
-                else if (!mediaPlayer.isPlaying()) mediaPlayer.start();
+                else if (!mediaPlayer.isPlaying()){
+                    mediaPlayer.start();
+                    buildNotification(PlaybackStatus.PLAYING);
+                }
                 mediaPlayer.setVolume(1.0f,1.0f);
                 break;
             case AudioManager.AUDIOFOCUS_LOSS:
@@ -304,7 +311,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 mediaPlayer = null;
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                if (mediaPlayer.isPlaying()) mediaPlayer.pause();
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.pause();
+                    buildNotification(PlaybackStatus.PAUSED);
+                }
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 if (mediaPlayer.isPlaying()) mediaPlayer.setVolume(0.1f,0.1f);
@@ -349,7 +359,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         public void onReceive(Context context, Intent intent) {
             //pause audio on ACTION_AUDIO_BECOMING_NOISY
             pauseMedia();
-         //   buildNotification(PlaybackStatus.PAUSED);
+            buildNotification(PlaybackStatus.PAUSED);
         }
     };
 
@@ -374,6 +384,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                     case TelephonyManager.CALL_STATE_RINGING:
                         if (mediaPlayer != null) {
                             pauseMedia();
+                            buildNotification(PlaybackStatus.PAUSED);
                             ongoingCall = true;
                         }
                         break;
