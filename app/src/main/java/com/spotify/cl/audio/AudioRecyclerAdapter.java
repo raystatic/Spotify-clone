@@ -21,7 +21,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
     ArrayList<String> songs, artists;
     ArrayList<Audio> songArrayList;
     SongInteractor listener;
-    int selectedPosition=-1;
+    public int selectedPosition=-1;
 
     public AudioRecyclerAdapter(Context context, ArrayList<Audio> songArrayList, SongInteractor listener) {
         this.context = context;

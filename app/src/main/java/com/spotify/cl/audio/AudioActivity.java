@@ -86,6 +86,8 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
     NotificationManager notificationManager;
 
+    AudioRecyclerAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -211,6 +213,8 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
                 songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
                 peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
                 fab.setImageResource(R.drawable.ic_action_pause_black);
+                adapter.selectedPosition = storage.loadAudioIndex();
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -222,6 +226,8 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
                 songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
                 peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
                 fab.setImageResource(R.drawable.ic_action_pause_black);
+                adapter.selectedPosition = storage.loadAudioIndex();
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -282,7 +288,7 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         main_layout.setVisibility(View.VISIBLE);
 
         if (audioList.size()!=0){
-            AudioRecyclerAdapter adapter = new AudioRecyclerAdapter(AudioActivity.this,audioList, this);
+            adapter = new AudioRecyclerAdapter(AudioActivity.this,audioList, this);
             LinearLayoutManager layoutManager = new LinearLayoutManager(AudioActivity.this);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(layoutManager);
@@ -422,6 +428,7 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             sendBroadcast(broadcastIntent);
            // initSeekBar();
         }
+
     }
 
     private void loadAudio() {
