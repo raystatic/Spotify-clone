@@ -46,7 +46,7 @@ import com.spotify.cl.services.OnClearFromRecentService;
 
 import java.util.ArrayList;
 
-public class AudioActivity extends AppCompatActivity implements AudioRecyclerAdapter.SongInteractor {
+public class AudioActivity extends AppCompatActivity implements AudioRecyclerAdapter.SongInteractor, AudioInteractor {
 
     private static final int PERMISSION_REQUEST = 1;
     public static final String Broadcast_PLAY_NEW_AUDIO = "com.spotify.cl.PlayNewAudio";
@@ -345,7 +345,8 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
             Toast.makeText(AudioActivity.this, "Service Bound", Toast.LENGTH_SHORT).show();
             updateButtons();
-            initSeekBar();
+           // initSeekBar();
+            player.setAudioInteractor(AudioActivity.this);
         }
 
         @Override
@@ -419,7 +420,7 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             storage.storeAudioIndex(audioIndex);
             Intent broadcastIntent = new Intent(Broadcast_PLAY_NEW_AUDIO);
             sendBroadcast(broadcastIntent);
-            initSeekBar();
+           // initSeekBar();
         }
     }
 
@@ -471,5 +472,10 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             //service is active
             player.stopSelf();
         }
+    }
+
+    @Override
+    public void onMediaPrepared() {
+        initSeekBar();
     }
 }

@@ -73,6 +73,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     //AudioPlayer notification ID
     private static final int NOTIFICATION_ID = 101;
 
+    //AudioInteractor
+    AudioInteractor audioInteractor;
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -277,6 +280,12 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public void onPrepared(MediaPlayer mp) {
         //Invoked when the media source is ready for playback.\
         playMedia();
+
+        Log.d("mediadebug","onprepared called");
+        Log.d("mediadebug","audiointeractor"+audioInteractor);
+        if (audioInteractor!=null){
+            audioInteractor.onMediaPrepared();
+        }
     }
 
     @Override
@@ -631,6 +640,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         } else if (actionString.equalsIgnoreCase(ACTION_STOP)) {
             transportControls.stop();
         }
+    }
+
+    public void setAudioInteractor(AudioInteractor audioInteractor){
+        this.audioInteractor =audioInteractor;
     }
 
 
