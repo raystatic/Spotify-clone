@@ -488,20 +488,17 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
     @Override
     public void onPlayed() {
-        peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
-        fab.setImageResource(R.drawable.ic_action_pause_black);
+
     }
 
     @Override
     public void onPaused() {
-        peekPlayBtn.setImageResource(R.drawable.ic_action_play);
-        fab.setImageResource(R.drawable.ic_action_play_black);
+
     }
 
     @Override
     public void onStopped() {
-        peekPlayBtn.setImageResource(R.drawable.ic_action_play);
-        fab.setImageResource(R.drawable.ic_action_play_black);
+
     }
 
     @Override
@@ -518,5 +515,16 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         adapter.notifyDataSetChanged();
         songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
         peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+    }
+
+    @Override
+    public void onPlayBackStatus(PlaybackStatus playbackStatus) {
+        if (playbackStatus == PlaybackStatus.PLAYING){
+            peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+            fab.setImageResource(R.drawable.ic_action_pause_black);
+        }else{
+            peekPlayBtn.setImageResource(R.drawable.ic_action_play);
+            fab.setImageResource(R.drawable.ic_action_play_black);
+        }
     }
 }

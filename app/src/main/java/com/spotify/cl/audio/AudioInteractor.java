@@ -7,4 +7,5 @@ public interface AudioInteractor {
     void onStopped();
     void onSkipToNext();
     void onSkipToPrevious();
+    void onPlayBackStatus(PlaybackStatus playbackStatus);
 }

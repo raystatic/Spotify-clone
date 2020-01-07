@@ -465,6 +465,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 super.onPlay();
                 resumeMedia();
                 buildNotification(PlaybackStatus.PLAYING);
+                audioInteractor.onPlayed();
+                audioInteractor.onPlayBackStatus(PlaybackStatus.PLAYING);
             }
 
             @Override
@@ -472,6 +474,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 super.onPause();
                 pauseMedia();
                 buildNotification(PlaybackStatus.PAUSED);
+                audioInteractor.onPaused();
+                audioInteractor.onPlayBackStatus(PlaybackStatus.PAUSED);
             }
 
             @Override
@@ -480,6 +484,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 skipToNext();
                 updateMetaData();
                 buildNotification(PlaybackStatus.PLAYING);
+                audioInteractor.onSkipToNext();
+                audioInteractor.onPlayBackStatus(PlaybackStatus.PLAYING);
             }
 
             @Override
@@ -488,12 +494,16 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 skipToPrevious();
                 updateMetaData();
                 buildNotification(PlaybackStatus.PLAYING);
+                audioInteractor.onSkipToPrevious();
+                audioInteractor.onPlayBackStatus(PlaybackStatus.PLAYING);
             }
 
             @Override
             public void onStop() {
                 super.onStop();
                 removeNotification();
+                audioInteractor.onStopped();
+                audioInteractor.onPlayBackStatus(PlaybackStatus.PAUSED);
                 //Stop the service
                 stopSelf();
             }
@@ -642,19 +652,19 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         String actionString = playbackAction.getAction();
         if (actionString.equalsIgnoreCase(ACTION_PLAY)) {
             transportControls.play();
-            audioInteractor.onPlayed();
+            //audioInteractor.onPlayed();
         } else if (actionString.equalsIgnoreCase(ACTION_PAUSE)) {
             transportControls.pause();
-            audioInteractor.onPaused();
+            //audioInteractor.onPaused();
         } else if (actionString.equalsIgnoreCase(ACTION_NEXT)) {
             transportControls.skipToNext();
-            audioInteractor.onSkipToNext();
+            //audioInteractor.onSkipToNext();
         } else if (actionString.equalsIgnoreCase(ACTION_PREVIOUS)) {
             transportControls.skipToPrevious();
-            audioInteractor.onSkipToPrevious();
+            //audioInteractor.onSkipToPrevious();
         } else if (actionString.equalsIgnoreCase(ACTION_STOP)) {
             transportControls.stop();
-            audioInteractor.onStopped();
+            //audioInteractor.onStopped();
         }
     }
 
