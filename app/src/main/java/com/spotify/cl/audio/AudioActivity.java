@@ -546,4 +546,14 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             fab.setImageResource(R.drawable.ic_action_play_black);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        if (bottomSheetBehavior.getState()== BottomSheetBehavior.STATE_EXPANDED){
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }else{
+            super.onBackPressed();
+        }
+    }
 }
