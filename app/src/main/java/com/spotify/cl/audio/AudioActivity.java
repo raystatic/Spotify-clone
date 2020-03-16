@@ -131,14 +131,19 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                player.skipToNext();
-                peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
-                songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
-                adapter.selectedPosition = storage.loadAudioIndex();
-                adapter.notifyDataSetChanged();
+                playNextSong();
             }
         });
     }
+
+    private void playNextSong() {
+        player.skipToNext();
+        peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+        songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+        adapter.selectedPosition = storage.loadAudioIndex();
+        adapter.notifyDataSetChanged();
+    }
+
 
     private void initFab() {
         fab.setOnClickListener(new View.OnClickListener() {
@@ -391,7 +396,7 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             public void onProgressChanged(SeekBar seekBar1, int i, boolean b) {
                 progressValue = i;
                 if (i==player.getMediaTotalDuration()){
-                    player.stopMedia();
+                    playNextSong();
                 }
 
                 if (b){
