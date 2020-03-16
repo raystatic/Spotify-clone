@@ -36,64 +36,54 @@
             android:orientation="vertical"
             android:id="@+id/main_layout">
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center_horizontal"
+                android:background="#000"
+                android:elevation="6dp"
+                android:layout_marginTop="20dp"
+                android:id="@+id/icon_card">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="50dp"
-                    android:background="#000"
-                    android:elevation="6dp"
-                    android:id="@+id/icon_card">
-
-                    <ImageView
-                        android:background="#E90808"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_action_song"/>
-
-                </androidx.cardview.widget.CardView>
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/playlist_name_tv"
-                    android:text="Offline Music"
-                    android:textColor="#fff"
-                    android:layout_marginTop="10dp"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:layout_below="@+id/icon_card"
-                    android:layout_centerHorizontal="true"/>
-
-                <Button
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/playlist_name_tv"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="Play"
-                    android:textAllCaps="false"
-                    android:textColor="#fff"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:id="@+id/play_btn_playlist"
-                    android:background="@drawable/button_background"/>
-
-                <androidx.recyclerview.widget.RecyclerView
+                <ImageView
+                    android:background="#E90808"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/main_rv"
-                    tools:listitem="@layout/recycler_main_adapter_layout"
-                    android:layout_below="@+id/play_btn_playlist"
-                    android:layout_marginTop="20dp"/>
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_action_song"/>
 
-            </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/playlist_name_tv"
+                android:text="Offline Music"
+                android:textColor="#fff"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_gravity="center_horizontal"/>
+
+            <Button
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="Play"
+                android:textAllCaps="false"
+                android:textColor="#fff"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:id="@+id/play_btn_playlist"
+                android:background="@drawable/button_background"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/main_rv"
+                tools:listitem="@layout/recycler_main_adapter_layout"
+                android:layout_marginTop="20dp"/>
 
         </LinearLayout>
 

@@ -8,6 +8,7 @@
     app:behavior_peekHeight="60dp"
     android:background="#000"
     android:id="@+id/bottom_sheet"
+    android:layout_gravity="bottom"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <LinearLayout
@@ -17,7 +18,7 @@
         android:background="@color/light_black"
         android:weightSum="2"
         android:id="@+id/bottom_bar"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <RelativeLayout
             android:layout_width="match_parent"

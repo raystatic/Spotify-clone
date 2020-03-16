@@ -95,33 +95,100 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
         storage = new StorageUtil(getApplicationContext());
 
-        progressBar = findViewById(R.id.main_progress);
-        recyclerView = findViewById(R.id.main_rv);
-        main_layout = findViewById(R.id.main_layout);
-        llBottomSheet = findViewById(R.id.bottom_sheet);
-        bottomBar = findViewById(R.id.bottom_bar);
-        peek_song_name_tv = findViewById(R.id.peek_song_name_tv);
-        permission_not_granted_tv = findViewById(R.id.permission_not_granted_tv);
-        peekPlayBtn = findViewById(R.id.peek_song_play_btn);
-        fab = findViewById(R.id.fab_btn);
-        seekBar = findViewById(R.id.song_seek_bar);
-        songNameTv = findViewById(R.id.song_text_tv);
-        playBtn = findViewById(R.id.play_btn_playlist);
-        prevBtn = findViewById(R.id.prev_song_btn);
-        nextBtn = findViewById(R.id.next_song_btn);
-        topLevelRel = findViewById(R.id.top_level_rel);
-        slideDownArrow = findViewById(R.id.slideDownArrow);
+        initViews();
 
+        initSongNameTv();
 
-        songNameTv.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        songNameTv.setSingleLine();
-        songNameTv.setMarqueeRepeatLimit(10);
-        songNameTv.setFocusable(true);
-        songNameTv.setHorizontallyScrolling(true);
-        songNameTv.setFocusableInTouchMode(true);
-        songNameTv.requestFocus();
+        initBottomSheet();
 
+        initStartingUI();
 
+        checkPermission();
+
+        setupChannelForAndroidO();
+
+        initPeekPlayBtn();
+
+        initFab();
+
+        initNextBtn();
+
+        initPrevButton();
+
+    }
+
+    private void initPrevButton() {
+        prevBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                player.skipToPrevious();
+                peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+                songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+                peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+                fab.setImageResource(R.drawable.ic_action_pause_black);
+                adapter.selectedPosition = storage.loadAudioIndex();
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void initNextBtn() {
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                player.skipToNext();
+                peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+                songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+                peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+                fab.setImageResource(R.drawable.ic_action_pause_black);
+                adapter.selectedPosition = storage.loadAudioIndex();
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void initFab() {
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (player.getMediaIsPlaying()){
+                    player.pauseMedia();
+                    updateButtons();
+                }else{
+                    player.playMedia();
+                    updateButtons();
+                }
+            }
+        });
+    }
+
+    private void initPeekPlayBtn() {
+        peekPlayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (player.getMediaIsPlaying()){
+                    player.pauseMedia();
+                    updateButtons();
+                }else{
+                    player.playMedia();
+                    updateButtons();
+                }
+            }
+        });
+    }
+
+    private void setupChannelForAndroidO() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createChannel();
+        }
+    }
+
+    private void initStartingUI() {
+        progressBar.setVisibility(View.VISIBLE);
+        main_layout.setVisibility(View.GONE);
+    }
+
+    private void initBottomSheet() {
         bottomBar.setVisibility(View.VISIBLE);
         bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -170,74 +237,35 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             }
         });
 
-        progressBar.setVisibility(View.VISIBLE);
-        main_layout.setVisibility(View.GONE);
+    }
 
-        checkPermission();
+    private void initSongNameTv() {
+        songNameTv.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        songNameTv.setSingleLine();
+        songNameTv.setMarqueeRepeatLimit(10);
+        songNameTv.setFocusable(true);
+        songNameTv.setHorizontallyScrolling(true);
+        songNameTv.setFocusableInTouchMode(true);
+        songNameTv.requestFocus();
+    }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createChannel();
-        }
-
-        peekPlayBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (player.getMediaIsPlaying()){
-                    player.pauseMedia();
-                    updateButtons();
-                }else{
-                    player.playMedia();
-                    updateButtons();
-                }
-            }
-        });
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (player.getMediaIsPlaying()){
-                    player.pauseMedia();
-                    updateButtons();
-                }else{
-                    player.playMedia();
-                    updateButtons();
-                }
-            }
-        });
-
-        nextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                player.skipToNext();
-                peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
-                songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
-                peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
-                fab.setImageResource(R.drawable.ic_action_pause_black);
-                adapter.selectedPosition = storage.loadAudioIndex();
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-        prevBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                player.skipToPrevious();
-                peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
-                songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
-                peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
-                fab.setImageResource(R.drawable.ic_action_pause_black);
-                adapter.selectedPosition = storage.loadAudioIndex();
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-    //    loadAudio();
-//        playAudio("https://upload.wikimedia.org/wikipedia/commons/6/6c/Grieg_Lyric_Pieces_Kobold.ogg");
-
-    //    playAudio(audioList.get(audioList.size()-1).getData());
-
-       // playAudio();
-
+    private void initViews() {
+        progressBar = findViewById(R.id.main_progress);
+        recyclerView = findViewById(R.id.main_rv);
+        main_layout = findViewById(R.id.main_layout);
+        llBottomSheet = findViewById(R.id.bottom_sheet);
+        bottomBar = findViewById(R.id.bottom_bar);
+        peek_song_name_tv = findViewById(R.id.peek_song_name_tv);
+        permission_not_granted_tv = findViewById(R.id.permission_not_granted_tv);
+        peekPlayBtn = findViewById(R.id.peek_song_play_btn);
+        fab = findViewById(R.id.fab_btn);
+        seekBar = findViewById(R.id.song_seek_bar);
+        songNameTv = findViewById(R.id.song_text_tv);
+        playBtn = findViewById(R.id.play_btn_playlist);
+        prevBtn = findViewById(R.id.prev_song_btn);
+        nextBtn = findViewById(R.id.next_song_btn);
+        topLevelRel = findViewById(R.id.top_level_rel);
+        slideDownArrow = findViewById(R.id.slideDownArrow);
     }
 
     private void updateButtons(){
