@@ -124,8 +124,6 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
                 player.skipToPrevious();
                 peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
                 songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
-                peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
-                fab.setImageResource(R.drawable.ic_action_pause_black);
                 adapter.selectedPosition = storage.loadAudioIndex();
                 adapter.notifyDataSetChanged();
             }
@@ -139,8 +137,6 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
                 player.skipToNext();
                 peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
                 songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
-                peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
-                fab.setImageResource(R.drawable.ic_action_pause_black);
                 adapter.selectedPosition = storage.loadAudioIndex();
                 adapter.notifyDataSetChanged();
             }
@@ -153,10 +149,8 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             public void onClick(View v) {
                 if (player.getMediaIsPlaying()){
                     player.pauseMedia();
-                    updateButtons();
                 }else{
                     player.playMedia();
-                    updateButtons();
                 }
             }
         });
@@ -168,10 +162,8 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             public void onClick(View v) {
                 if (player.getMediaIsPlaying()){
                     player.pauseMedia();
-                    updateButtons();
                 }else{
                     player.playMedia();
-                    updateButtons();
                 }
             }
         });
@@ -268,17 +260,6 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         slideDownArrow = findViewById(R.id.slideDownArrow);
     }
 
-    private void updateButtons(){
-        Log.d("mediadebug","updatebuttons");
-        if (player.getMediaIsPlaying()){
-            peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
-            fab.setImageResource(R.drawable.ic_action_pause_black);
-        }else{
-            peekPlayBtn.setImageResource(R.drawable.ic_action_play);
-            fab.setImageResource(R.drawable.ic_action_play_black);
-        }
-    }
-
     private void createChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel channel1 = new NotificationChannel(MediaPlayerService.CHANNEL_ID,
@@ -351,9 +332,6 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         CURRENT_SONG_INDEX = position;
         playAudio(CURRENT_SONG_INDEX);
 
-        peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
-        fab.setImageResource(R.drawable.ic_action_pause_black);
-
         if (song.getTitle().length()>30){
             peek_song_name_tv.setText(song.getTitle().substring(0,30)+"...");
         }else{
@@ -378,8 +356,6 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             serviceBound = true;
 
             Toast.makeText(AudioActivity.this, "Service Bound", Toast.LENGTH_SHORT).show();
-            updateButtons();
-           // initSeekBar();
             player.setAudioInteractor(AudioActivity.this);
         }
 
@@ -415,8 +391,7 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
                 progressValue = i;
                 if (i==player.getMediaTotalDuration()){
                     player.stopMedia();
-                    peekPlayBtn.setImageResource(R.drawable.ic_action_play);
-                    fab.setImageResource(R.drawable.ic_action_play_black);
+                    onStopped();
                 }
 
                 if (b){
@@ -516,17 +491,20 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
     @Override
     public void onPlayed() {
-
+        peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+        fab.setImageResource(R.drawable.ic_action_pause_black);
     }
 
     @Override
     public void onPaused() {
-
+        peekPlayBtn.setImageResource(R.drawable.ic_action_play);
+        fab.setImageResource(R.drawable.ic_action_play_black);
     }
 
     @Override
     public void onStopped() {
-
+        peekPlayBtn.setImageResource(R.drawable.ic_action_play);
+        fab.setImageResource(R.drawable.ic_action_play_black);
     }
 
     @Override

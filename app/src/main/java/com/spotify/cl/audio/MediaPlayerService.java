@@ -167,6 +167,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public void playMedia(){
         if (!mediaPlayer.isPlaying()){
             mediaPlayer.start();
+            audioInteractor.onPlayed();
             buildNotification(PlaybackStatus.PLAYING);
         }
     }
@@ -175,6 +176,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         if (mediaPlayer == null) return;
         if (mediaPlayer.isPlaying()){
             mediaPlayer.stop();
+            audioInteractor.onStopped();
         }
     }
 
@@ -183,6 +185,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             mediaPlayer.pause();
             buildNotification(PlaybackStatus.PAUSED);
             resumePosition = mediaPlayer.getCurrentPosition();
+            audioInteractor.onPaused();
         }
     }
 
