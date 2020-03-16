@@ -1,7 +1,9 @@
 package com.spotify.cl.audio;
 
+import android.media.MediaPlayer;
+
 public interface AudioInteractor {
-    void onMediaPrepared();
+    void onMediaPrepared(MediaPlayer mediaPlayer);
     void onPlayed();
     void onPaused();
     void onStopped();

@@ -14,10 +14,10 @@ import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,14 +39,11 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.spotify.cl.CreateNotification;
-import com.spotify.cl.PlaylistSongListActivity;
 import com.spotify.cl.R;
-import com.spotify.cl.services.OnClearFromRecentService;
 
 import java.util.ArrayList;
 
-public class AudioActivity extends AppCompatActivity implements AudioRecyclerAdapter.SongInteractor, AudioInteractor {
+public class AudioActivity extends AppCompatActivity implements AudioRecyclerAdapter.SongInteractor, AudioInteractor{
 
     private static final int PERMISSION_REQUEST = 1;
     public static final String Broadcast_PLAY_NEW_AUDIO = "com.spotify.cl.PlayNewAudio";
@@ -356,7 +353,11 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             serviceBound = true;
 
             Toast.makeText(AudioActivity.this, "Service Bound", Toast.LENGTH_SHORT).show();
+
             player.setAudioInteractor(AudioActivity.this);
+            onPlayed();
+            initSeekBar();
+
         }
 
         @Override
@@ -391,7 +392,6 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
                 progressValue = i;
                 if (i==player.getMediaTotalDuration()){
                     player.stopMedia();
-                    onStopped();
                 }
 
                 if (b){
@@ -423,6 +423,7 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             Intent playerIntent = new Intent(this, MediaPlayerService.class);
             startService(playerIntent);
             bindService(playerIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+
         } else {
             //Service is active
             //Send a broadcast to the service -> PLAY_NEW_AUDIO
@@ -485,8 +486,15 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
     }
 
     @Override
-    public void onMediaPrepared() {
+    public void onMediaPrepared(MediaPlayer mediaPlayer) {
         initSeekBar();
+        if (mediaPlayer.isPlaying()){
+            peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
+            fab.setImageResource(R.drawable.ic_action_pause_black);
+        }else{
+            peekPlayBtn.setImageResource(R.drawable.ic_action_play);
+            fab.setImageResource(R.drawable.ic_action_play_black);
+        }
     }
 
     @Override

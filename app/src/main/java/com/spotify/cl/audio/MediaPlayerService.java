@@ -76,7 +76,6 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     //AudioInteractor
     AudioInteractor audioInteractor;
 
-
     @Override
     public IBinder onBind(Intent intent) {
         return iBinder;
@@ -131,6 +130,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 e.printStackTrace();
                 stopSelf();
             }
+//            audioInteractor.onPlayed();
             buildNotification(PlaybackStatus.PLAYING);
         }
 
@@ -153,7 +153,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         mediaPlayer.reset();
 
         try{
-            // Set the data source to the mediaFile location
+            // Set the data soublackrce to the mediaFile location
 
             mediaPlayer.setDataSource(activeAudio.getData());
         }catch (IOException e){
@@ -167,7 +167,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public void playMedia(){
         if (!mediaPlayer.isPlaying()){
             mediaPlayer.start();
-            audioInteractor.onPlayed();
+            if (audioInteractor!=null)
+                audioInteractor.onPlayed();
             buildNotification(PlaybackStatus.PLAYING);
         }
     }
@@ -176,7 +177,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         if (mediaPlayer == null) return;
         if (mediaPlayer.isPlaying()){
             mediaPlayer.stop();
-            audioInteractor.onStopped();
+            if (audioInteractor!=null)
+                audioInteractor.onStopped();
         }
     }
 
@@ -185,7 +187,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             mediaPlayer.pause();
             buildNotification(PlaybackStatus.PAUSED);
             resumePosition = mediaPlayer.getCurrentPosition();
-            audioInteractor.onPaused();
+            if (audioInteractor!=null)
+                audioInteractor.onPaused();
         }
     }
 
@@ -291,7 +294,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         Log.d("mediadebug","onprepared called");
         Log.d("mediadebug","audiointeractor"+audioInteractor);
         if (audioInteractor!=null){
-            audioInteractor.onMediaPrepared();
+            audioInteractor.onMediaPrepared(mp);
         }
     }
 
@@ -468,8 +471,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 super.onPlay();
                 resumeMedia();
                 buildNotification(PlaybackStatus.PLAYING);
-                audioInteractor.onPlayed();
-                audioInteractor.onPlayBackStatus(PlaybackStatus.PLAYING);
+                if (audioInteractor!=null){
+                    audioInteractor.onPlayed();
+                    audioInteractor.onPlayBackStatus(PlaybackStatus.PLAYING);
+                }
+
             }
 
             @Override
@@ -477,8 +483,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 super.onPause();
                 pauseMedia();
                 buildNotification(PlaybackStatus.PAUSED);
-                audioInteractor.onPaused();
-                audioInteractor.onPlayBackStatus(PlaybackStatus.PAUSED);
+                if (audioInteractor!=null) {
+                    audioInteractor.onPaused();
+                    audioInteractor.onPlayBackStatus(PlaybackStatus.PAUSED);
+                }
             }
 
             @Override
@@ -487,8 +495,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 skipToNext();
                 updateMetaData();
                 buildNotification(PlaybackStatus.PLAYING);
-                audioInteractor.onSkipToNext();
-                audioInteractor.onPlayBackStatus(PlaybackStatus.PLAYING);
+                if (audioInteractor!=null){
+                    audioInteractor.onSkipToNext();
+                    audioInteractor.onPlayBackStatus(PlaybackStatus.PLAYING);
+                }
             }
 
             @Override
@@ -497,16 +507,20 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 skipToPrevious();
                 updateMetaData();
                 buildNotification(PlaybackStatus.PLAYING);
-                audioInteractor.onSkipToPrevious();
-                audioInteractor.onPlayBackStatus(PlaybackStatus.PLAYING);
+                if (audioInteractor!=null){
+                    audioInteractor.onSkipToPrevious();
+                    audioInteractor.onPlayBackStatus(PlaybackStatus.PLAYING);
+                }
             }
 
             @Override
             public void onStop() {
                 super.onStop();
                 removeNotification();
-                audioInteractor.onStopped();
-                audioInteractor.onPlayBackStatus(PlaybackStatus.PAUSED);
+                if (audioInteractor!=null){
+                    audioInteractor.onStopped();
+                    audioInteractor.onPlayBackStatus(PlaybackStatus.PAUSED);
+                }
                 //Stop the service
                 stopSelf();
             }
@@ -606,9 +620,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 .setLargeIcon(largeIcon)
                 .setSmallIcon(android.R.drawable.stat_sys_headset)
                 // Set Notification content information
-                .setContentText(activeAudio.getArtist())
+                .setContentText(activeAudio.getTitle())
                 .setContentTitle(activeAudio.getAlbum())
-                .setContentInfo(activeAudio.getTitle())
+                .setContentInfo(activeAudio.getArtist())
                 // Add playback actions
                 .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
                 .addAction(notificationAction, "pause", play_pauseAction)
