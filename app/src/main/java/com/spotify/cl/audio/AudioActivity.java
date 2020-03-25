@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.storage.StorageManager;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -118,7 +119,23 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         prevBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                player.skipToPrevious();
+
+                StorageUtil util = new StorageUtil(AudioActivity.this);
+                int audioIndex = util.loadAudioIndex();
+
+                if (audioIndex == 0) {
+                    audioIndex = audioList.size() - 1;
+                } else {
+                    audioIndex -=1;
+                }
+
+                util.storeAudioIndex(audioIndex);
+
+                  Log.d("next_debug","play prev song called");
+                // player.skipToNext();
+                playAudio(util.loadAudioIndex());
+
+                //player.skipToPrevious();
                 peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
                 songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
                 adapter.selectedPosition = storage.loadAudioIndex();
@@ -131,13 +148,28 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               // Log.d("next_debug","play next on click");
                 playNextSong();
             }
         });
     }
 
     private void playNextSong() {
-        player.skipToNext();
+
+        StorageUtil util = new StorageUtil(this);
+        int audioIndex = util.loadAudioIndex();
+
+        if (audioIndex == audioList.size() - 1) {
+            audioIndex = 0;
+        } else {
+            audioIndex +=1;
+        }
+
+        util.storeAudioIndex(audioIndex);
+
+      //  Log.d("next_debug","play next song called");
+       // player.skipToNext();
+        playAudio(util.loadAudioIndex());
         peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
         songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
         adapter.selectedPosition = storage.loadAudioIndex();
@@ -396,7 +428,10 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             public void onProgressChanged(SeekBar seekBar1, int i, boolean b) {
                 progressValue = i;
                 if (i==player.getMediaTotalDuration()){
+//                    Log.d("next_debug","play next on progress");
+//                    Log.d("next_debug","on progress : "+i+" : "+player.getMediaTotalDuration());
                     playNextSong();
+                    //player.stopMedia();
                 }
 
                 if (b){

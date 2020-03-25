@@ -221,7 +221,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
 
     public int getMediaCurrentPosition(){
-        return mediaPlayer.getCurrentPosition();
+        if (mediaPlayer!=null)
+            return mediaPlayer.getCurrentPosition();
+        else
+            return 0;
     }
 
 
@@ -547,6 +550,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
 
     public void skipToNext() {
+
+//        Log.d("next_debug",audioIndex+" : "+audioList.size());
 
         if (audioIndex == audioList.size() - 1) {
             //if last in playlist
