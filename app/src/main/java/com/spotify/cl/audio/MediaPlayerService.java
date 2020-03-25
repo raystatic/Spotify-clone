@@ -29,6 +29,7 @@ import com.spotify.cl.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MediaPlayerService extends Service implements MediaPlayer.OnCompletionListener,
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener,
@@ -156,11 +157,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             // Set the data soublackrce to the mediaFile location
 
             mediaPlayer.setDataSource(activeAudio.getData());
-        }catch (IOException e){
+            mediaPlayer.prepareAsync();
+        }catch (Exception e){
             e.printStackTrace();
+            Log.d("mediaplayer_exception", Objects.requireNonNull(e.getMessage()));
         }
-
-        mediaPlayer.prepareAsync();
 
     }
 
