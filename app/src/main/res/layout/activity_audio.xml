@@ -84,11 +84,12 @@
                 android:id="@+id/main_rv"
                 tools:listitem="@layout/recycler_main_adapter_layout"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="60dp"/>
+                android:layout_marginBottom="60dp"
+                android:padding="10dp"/>
         </LinearLayout>
 
     </RelativeLayout>
 
-    <include layout="@layout/music_player_bottom_sheet" />
+    <include layout="@layout/music_player_bottom_sheet_v2" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -2,6 +2,7 @@ package com.spotify.cl.audio;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -63,7 +64,9 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
     TextView permission_not_granted_tv, peek_song_name_tv, songNameTv;
 
-    LinearLayout main_layout, llBottomSheet, bottomBar;
+    LinearLayout main_layout, bottomBar;
+
+    ConstraintLayout llBottomSheet;
 
     RelativeLayout topLevelRel;
 
@@ -96,6 +99,8 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         initViews();
 
         initSongNameTv();
+
+        initPeekSongNameTv();
 
         initBottomSheet();
 
@@ -132,8 +137,7 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
                         adapter.notifyDataSetChanged();
                     }
                 }else{
-                    StorageUtil util = new StorageUtil(AudioActivity.this);
-                    int audioIndex = util.loadAudioIndex();
+                    int audioIndex = storage.loadAudioIndex();
 
                     if (audioIndex == -1){
                         audioIndex = 0;
@@ -156,8 +160,7 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             @Override
             public void onClick(View v) {
 
-                StorageUtil util = new StorageUtil(AudioActivity.this);
-                int audioIndex = util.loadAudioIndex();
+                int audioIndex = storage.loadAudioIndex();
 
                 if (audioIndex == 0) {
                     audioIndex = audioList.size() - 1;
@@ -165,9 +168,9 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
                     audioIndex -=1;
                 }
 
-                util.storeAudioIndex(audioIndex);
+                storage.storeAudioIndex(audioIndex);
 
-                playAudio(util.loadAudioIndex());
+                playAudio(storage.loadAudioIndex());
 
                 peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
                 songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
@@ -188,8 +191,7 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
     private void playNextSong() {
 
-        StorageUtil util = new StorageUtil(this);
-        int audioIndex = util.loadAudioIndex();
+        int audioIndex = storage.loadAudioIndex();
 
         if (audioIndex == audioList.size() - 1) {
             audioIndex = 0;
@@ -197,8 +199,8 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             audioIndex +=1;
         }
 
-        util.storeAudioIndex(audioIndex);
-        playAudio(util.loadAudioIndex());
+        storage.storeAudioIndex(audioIndex);
+        playAudio(storage.loadAudioIndex());
         peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
         songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
         adapter.selectedPosition = storage.loadAudioIndex();
@@ -210,10 +212,12 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (player.getMediaIsPlaying()){
-                    player.pauseMedia();
-                }else{
-                    player.playMedia();
+                if (player!=null){
+                    if (player.getMediaIsPlaying()){
+                        player.pauseMedia();
+                    }else{
+                        player.playMedia();
+                    }
                 }
             }
         });
@@ -223,10 +227,12 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         peekPlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (player.getMediaIsPlaying()){
-                    player.pauseMedia();
-                }else{
-                    player.playMedia();
+                if (player!=null){
+                    if (player.getMediaIsPlaying()){
+                        player.pauseMedia();
+                    }else{
+                        player.playMedia();
+                    }
                 }
             }
         });
@@ -258,9 +264,11 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             @Override
             public void onStateChanged(@NonNull View view, int i) {
                 if (bottomSheetBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED){
+                    initSongNameTv();
                     bottomBar.setVisibility(View.GONE);
                     topLevelRel.setVisibility(View.GONE);
                 }else if (bottomSheetBehavior.getState()==BottomSheetBehavior.STATE_COLLAPSED){
+                    initPeekSongNameTv();
                     bottomBar.setVisibility(View.VISIBLE);
                     topLevelRel.setVisibility(View.VISIBLE);
                 }
@@ -302,6 +310,16 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         songNameTv.setHorizontallyScrolling(true);
         songNameTv.setFocusableInTouchMode(true);
         songNameTv.requestFocus();
+    }
+
+    private void initPeekSongNameTv(){
+        peek_song_name_tv.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        peek_song_name_tv.setSingleLine();
+        peek_song_name_tv.setMarqueeRepeatLimit(10);
+        peek_song_name_tv.setFocusable(true);
+        peek_song_name_tv.setHorizontallyScrolling(true);
+        peek_song_name_tv.setFocusableInTouchMode(true);
+        peek_song_name_tv.requestFocus();
     }
 
     private void initViews() {
@@ -395,11 +413,8 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         CURRENT_SONG_INDEX = position;
         playAudio(CURRENT_SONG_INDEX);
 
-        if (song.getTitle().length()>30){
-            peek_song_name_tv.setText(song.getTitle().substring(0,30)+"...");
-        }else{
-            peek_song_name_tv.setText(song.getTitle());
-        }
+        peek_song_name_tv.setText(song.getTitle());
+
         songNameTv.setText(song.getTitle());
 
         seekBar.setProgress(0);
@@ -613,5 +628,10 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(setIntent);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }
