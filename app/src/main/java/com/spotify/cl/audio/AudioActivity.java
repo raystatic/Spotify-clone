@@ -113,6 +113,42 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
         initPrevButton();
 
+        initPlayButton();
+
+    }
+
+    private void initPlayButton() {
+        playBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (player!=null){
+                    if (player.getMediaIsPlaying()){
+                        player.pauseMedia();
+                    }else{
+                        player.playMedia();
+                        peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+                        songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+                        adapter.selectedPosition = storage.loadAudioIndex();
+                        adapter.notifyDataSetChanged();
+                    }
+                }else{
+                    StorageUtil util = new StorageUtil(AudioActivity.this);
+                    int audioIndex = util.loadAudioIndex();
+
+                    if (audioIndex == -1){
+                        audioIndex = 0;
+                    }
+
+                    playAudio(audioIndex);
+                    playBtn.setText("Pause");
+
+                    peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+                    songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+                    adapter.selectedPosition = storage.loadAudioIndex();
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     private void initPrevButton() {
@@ -506,9 +542,11 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         if (mediaPlayer.isPlaying()){
             peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
             fab.setImageResource(R.drawable.ic_action_pause_black);
+            playBtn.setText("Pause");
         }else{
             peekPlayBtn.setImageResource(R.drawable.ic_action_play);
             fab.setImageResource(R.drawable.ic_action_play_black);
+            playBtn.setText("Play");
         }
     }
 
@@ -516,18 +554,21 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
     public void onPlayed() {
         peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
         fab.setImageResource(R.drawable.ic_action_pause_black);
+        playBtn.setText("Pause");
     }
 
     @Override
     public void onPaused() {
         peekPlayBtn.setImageResource(R.drawable.ic_action_play);
         fab.setImageResource(R.drawable.ic_action_play_black);
+        playBtn.setText("Play");
     }
 
     @Override
     public void onStopped() {
         peekPlayBtn.setImageResource(R.drawable.ic_action_play);
         fab.setImageResource(R.drawable.ic_action_play_black);
+        playBtn.setText("Play");
     }
 
     @Override
@@ -551,9 +592,11 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         if (playbackStatus == PlaybackStatus.PLAYING){
             peekPlayBtn.setImageResource(R.drawable.ic_action_pause);
             fab.setImageResource(R.drawable.ic_action_pause_black);
+            playBtn.setText("Pause");
         }else{
             peekPlayBtn.setImageResource(R.drawable.ic_action_play);
             fab.setImageResource(R.drawable.ic_action_play_black);
+            playBtn.setText("Pause");
         }
     }
 
