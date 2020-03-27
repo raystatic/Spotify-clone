@@ -545,6 +545,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 .setColor(getResources().getColor(R.color.colorPrimary))
                 .setLargeIcon(largeIcon)
                 .setSmallIcon(android.R.drawable.stat_sys_headset)
+                .setOngoing(true)
                 .setContentText(activeAudio.getTitle())
                 .setContentTitle(activeAudio.getAlbum())
                 .setContentInfo(activeAudio.getArtist())

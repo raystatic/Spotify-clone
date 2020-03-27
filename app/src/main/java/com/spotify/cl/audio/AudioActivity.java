@@ -562,7 +562,13 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         if (bottomSheetBehavior.getState()== BottomSheetBehavior.STATE_EXPANDED){
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }else{
-            super.onBackPressed();
+            //super.onBackPressed();
+           // onPause();
+
+            Intent setIntent = new Intent(Intent.ACTION_MAIN);
+            setIntent.addCategory(Intent.CATEGORY_HOME);
+            setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(setIntent);
         }
     }
 }
