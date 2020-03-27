@@ -22,7 +22,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".audio.AudioActivity"></activity>
-        <activity android:name=".PlaylistSongListActivity" />
         <activity
             android:name=".SplashActivity"
             android:theme="@style/Theme.Transparent">
@@ -32,11 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
 
-        <receiver android:name=".services.NotificationActionService" />
-
-        <service android:name=".services.OnClearFromRecentService" />
         <service android:name=".audio.MediaPlayerService" />
 
         <meta-data

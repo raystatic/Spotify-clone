@@ -8,10 +8,12 @@ import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.spotify.cl.audio.AudioActivity;
+
 public class SplashActivity extends AppCompatActivity {
 
     private static long SLEEP_TIME = 2;
-    private static String TAG = MainActivity.class.getName();
+    private static String TAG = SplashActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,7 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             // Start main activity
-            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            Intent intent = new Intent(SplashActivity.this, AudioActivity.class);
             SplashActivity.this.startActivity(intent);
             SplashActivity.this.finish();
         }
