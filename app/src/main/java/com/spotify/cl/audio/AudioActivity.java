@@ -218,6 +218,20 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
                     }else{
                         player.playMedia();
                     }
+                }else{
+                    int audioIndex = storage.loadAudioIndex();
+
+                    if (audioIndex == -1){
+                        audioIndex = 0;
+                    }
+
+                    playAudio(audioIndex);
+                    playBtn.setText("Pause");
+
+                    peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+                    songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+                    adapter.selectedPosition = storage.loadAudioIndex();
+                    adapter.notifyDataSetChanged();
                 }
             }
         });
@@ -233,6 +247,20 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
                     }else{
                         player.playMedia();
                     }
+                }else{
+                    int audioIndex = storage.loadAudioIndex();
+
+                    if (audioIndex == -1){
+                        audioIndex = 0;
+                    }
+
+                    playAudio(audioIndex);
+                    playBtn.setText("Pause");
+
+                    peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+                    songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
+                    adapter.selectedPosition = storage.loadAudioIndex();
+                    adapter.notifyDataSetChanged();
                 }
             }
         });
@@ -428,7 +456,7 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             player = binder.getService();
             serviceBound = true;
 
-            Toast.makeText(AudioActivity.this, "Service Bound", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(AudioActivity.this, "Service Bound", Toast.LENGTH_SHORT).show();
 
             player.setAudioInteractor(AudioActivity.this);
             onPlayed();
