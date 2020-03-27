@@ -131,11 +131,8 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
                 util.storeAudioIndex(audioIndex);
 
-                  Log.d("next_debug","play prev song called");
-                // player.skipToNext();
                 playAudio(util.loadAudioIndex());
 
-                //player.skipToPrevious();
                 peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
                 songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
                 adapter.selectedPosition = storage.loadAudioIndex();
@@ -148,7 +145,6 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // Log.d("next_debug","play next on click");
                 playNextSong();
             }
         });
@@ -166,9 +162,6 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         }
 
         util.storeAudioIndex(audioIndex);
-
-      //  Log.d("next_debug","play next song called");
-       // player.skipToNext();
         playAudio(util.loadAudioIndex());
         peek_song_name_tv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
         songNameTv.setText(storage.loadAudio().get(storage.loadAudioIndex()).getTitle());
@@ -375,16 +368,11 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
         seekBar.setProgress(0);
 
-
-        //handle seekbar
-
     }
 
-    //Binding this Client to the AudioPlayer Service
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
             MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;
             player = binder.getService();
             serviceBound = true;
@@ -427,13 +415,6 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             @Override
             public void onProgressChanged(SeekBar seekBar1, int i, boolean b) {
                 progressValue = i;
-//                if (i==player.getMediaTotalDuration()){
-////                    Log.d("next_debug","play next on progress");
-////                    Log.d("next_debug","on progress : "+i+" : "+player.getMediaTotalDuration());
-//                   // playNextSong();
-//                    //player.stopMedia();
-//                }
-
                 if (b){
                     player.seekToMedia(i);
                     seekBar1.setProgress(i);
@@ -455,7 +436,6 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
     }
 
     private void playAudio(int audioIndex) {
-        //Check is service is active
         if (!serviceBound) {
             storage.storeAudio(audioList);
             storage.storeAudioIndex(audioIndex);
@@ -465,12 +445,9 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             bindService(playerIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
         } else {
-            //Service is active
-            //Send a broadcast to the service -> PLAY_NEW_AUDIO
             storage.storeAudioIndex(audioIndex);
             Intent broadcastIntent = new Intent(Broadcast_PLAY_NEW_AUDIO);
             sendBroadcast(broadcastIntent);
-           // initSeekBar();
         }
 
     }
@@ -491,7 +468,6 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
                 String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
                 String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
 
-                // Save to audioList
                 audioList.add(new Audio(data, title, album, artist));
             }
         }
@@ -520,7 +496,6 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
         if (serviceBound) {
             unbindService(serviceConnection);
-            //service is active
             player.stopSelf();
         }
     }
@@ -584,7 +559,6 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
         if (bottomSheetBehavior.getState()== BottomSheetBehavior.STATE_EXPANDED){
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }else{
