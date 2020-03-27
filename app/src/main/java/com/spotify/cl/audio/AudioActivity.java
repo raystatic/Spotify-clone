@@ -427,12 +427,12 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
             @Override
             public void onProgressChanged(SeekBar seekBar1, int i, boolean b) {
                 progressValue = i;
-                if (i==player.getMediaTotalDuration()){
-//                    Log.d("next_debug","play next on progress");
-//                    Log.d("next_debug","on progress : "+i+" : "+player.getMediaTotalDuration());
-                    playNextSong();
-                    //player.stopMedia();
-                }
+//                if (i==player.getMediaTotalDuration()){
+////                    Log.d("next_debug","play next on progress");
+////                    Log.d("next_debug","on progress : "+i+" : "+player.getMediaTotalDuration());
+//                   // playNextSong();
+//                    //player.stopMedia();
+//                }
 
                 if (b){
                     player.seekToMedia(i);

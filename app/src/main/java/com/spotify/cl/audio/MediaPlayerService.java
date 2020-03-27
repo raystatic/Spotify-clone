@@ -255,10 +255,17 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     @Override
     public void onCompletion(MediaPlayer mp) {
         //Invoked when playback of a media source has completed.
-        stopMedia();
 
-        //stop the service
-        stopSelf();
+//        Log.d("song_complete_debug","on complete called");
+
+        skipToNext();
+        if (audioInteractor!=null)
+            audioInteractor.onSkipToNext();
+
+//        stopMedia();
+//
+//        //stop the service
+//        stopSelf();
     }
 
     //Handle errors
