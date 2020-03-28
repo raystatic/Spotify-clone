@@ -405,7 +405,7 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         progressBar.setVisibility(View.GONE);
         main_layout.setVisibility(View.VISIBLE);
 
-        if (audioList.size()!=0){
+        if (audioList!=null && audioList.size()!=0){
             adapter = new AudioRecyclerAdapter(AudioActivity.this,audioList, this);
             LinearLayoutManager layoutManager = new LinearLayoutManager(AudioActivity.this);
             recyclerView.setAdapter(adapter);
@@ -424,11 +424,13 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
                             Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
                         Toast.makeText(AudioActivity.this,"Permission Granted", Toast.LENGTH_SHORT).show();
                         fetchSongs();
+                        llBottomSheet.setVisibility(View.VISIBLE);
                     }
                 }else{
                     Toast.makeText(AudioActivity.this,"Permission Not Granted",Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                     permission_not_granted_tv.setVisibility(View.VISIBLE);
+                    llBottomSheet.setVisibility(View.GONE);
                 }
                 return;
             }
@@ -661,5 +663,6 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
     @Override
     protected void onResume() {
         super.onResume();
+       // checkPermission();
     }
 }
