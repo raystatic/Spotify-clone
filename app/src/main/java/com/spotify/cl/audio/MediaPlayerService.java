@@ -27,9 +27,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.spotify.cl.R;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class MediaPlayerService extends Service implements MediaPlayer.OnCompletionListener,
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener,
@@ -537,12 +535,13 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
                 R.drawable.spotify); //replace with your own image
 
-        Notification notification = new NotificationCompat.Builder(this,CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,CHANNEL_ID)
                 .setShowWhen(false)
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                         .setMediaSession(mediaSession.getSessionToken())
                         .setShowActionsInCompactView(0, 1, 2))
                 .setColor(getResources().getColor(R.color.colorPrimary))
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setLargeIcon(largeIcon)
                 .setSmallIcon(android.R.drawable.stat_sys_headset)
                 .setOngoing(true)
@@ -551,8 +550,12 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 .setContentInfo(activeAudio.getArtist())
                 .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
                 .addAction(notificationAction, "pause", play_pauseAction)
-                .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2))
-                .build();
+                .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2));
+
+        if (playbackStatus == PlaybackStatus.PAUSED)
+            builder.setOngoing(false);
+
+        Notification notification = builder.build();
 
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
     }
