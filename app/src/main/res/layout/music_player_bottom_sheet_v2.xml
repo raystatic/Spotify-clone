@@ -90,13 +90,13 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary">
+            android:background="@drawable/green_black_gradient">
 
             <ImageView
                 android:layout_width="350dp"
                 android:layout_height="350dp"
                 android:layout_centerInParent="true"
-                android:src="@drawable/ic_action_music_grey"/>
+                android:src="@drawable/ic_action_song"/>
 
         </RelativeLayout>
 
@@ -139,9 +139,12 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#fff"
             android:layout_centerHorizontal="true"
-            app:fabSize="auto"
+            app:fabSize="normal"
             android:id="@+id/fab_btn"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:src="@drawable/ic_action_play_black"/>
+
 
         <ImageButton
             android:layout_width="50dp"
