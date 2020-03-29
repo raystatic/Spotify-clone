@@ -1,4 +1,4 @@
-package com.spotify.cl;
+package com.spotify.playit;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.spotify.cl.audio.AudioActivity;
+import com.spotify.playit.audio.AudioActivity;
 
 public class SplashActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.spotify.cl.audio;
+package com.spotify.playit.audio;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +24,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.storage.StorageManager;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -41,14 +40,14 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.spotify.cl.R;
+import com.spotify.playit.R;
 
 import java.util.ArrayList;
 
 public class AudioActivity extends AppCompatActivity implements AudioRecyclerAdapter.SongInteractor, AudioInteractor{
 
     private static final int PERMISSION_REQUEST = 1;
-    public static final String Broadcast_PLAY_NEW_AUDIO = "com.spotify.cl.PlayNewAudio";
+    public static final String Broadcast_PLAY_NEW_AUDIO = "com.spotify.playit.PlayNewAudio";
 
     private MediaPlayerService player;
     boolean serviceBound = false;

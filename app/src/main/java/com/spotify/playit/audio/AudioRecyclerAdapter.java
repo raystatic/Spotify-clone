@@ -1,4 +1,4 @@
-package com.spotify.cl.audio;
+package com.spotify.playit.audio;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.spotify.cl.R;
+import com.spotify.playit.R;
 
 import java.util.ArrayList;
 

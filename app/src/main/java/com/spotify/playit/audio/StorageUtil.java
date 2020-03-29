@@ -1,4 +1,4 @@
-package com.spotify.cl.audio;
+package com.spotify.playit.audio;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class StorageUtil {
 
-    private final String STORAGE = "com.spotify.cl.audio.STORAGE";
+    private final String STORAGE = "com.spotify.playit.audio.STORAGE";
     private SharedPreferences preferences;
     private Context context;
 

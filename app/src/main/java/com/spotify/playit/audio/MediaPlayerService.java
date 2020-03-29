@@ -1,4 +1,4 @@
-package com.spotify.cl.audio;
+package com.spotify.playit.audio;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -25,7 +25,7 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import com.spotify.cl.R;
+import com.spotify.playit.R;
 
 import java.util.ArrayList;
 
@@ -53,11 +53,11 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     public static final String CHANNEL_ID = "channel1";
 
-    public static final String ACTION_PLAY = "com.spotify.cl.audio.ACTION_PLAY";
-    public static final String ACTION_PAUSE = "com.spotify.cl.audio.ACTION_PAUSE";
-    public static final String ACTION_PREVIOUS = "com.spotify.cl.audio.ACTION_PREVIOUS";
-    public static final String ACTION_NEXT = "com.spotify.cl.audio.ACTION_NEXT";
-    public static final String ACTION_STOP = "com.spotify.cl.audio.ACTION_STOP";
+    public static final String ACTION_PLAY = "com.spotify.playit.audio.ACTION_PLAY";
+    public static final String ACTION_PAUSE = "com.spotify.playit.audio.ACTION_PAUSE";
+    public static final String ACTION_PREVIOUS = "com.spotify.playit.audio.ACTION_PREVIOUS";
+    public static final String ACTION_NEXT = "com.spotify.playit.audio.ACTION_NEXT";
+    public static final String ACTION_STOP = "com.spotify.playit.audio.ACTION_STOP";
 
 
     private MediaSessionManager mediaSessionManager;

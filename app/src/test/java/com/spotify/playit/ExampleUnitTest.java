@@ -1,4 +1,4 @@
-package com.spotify.cl;
+package com.spotify.playit;
 
 import org.junit.Test;
 

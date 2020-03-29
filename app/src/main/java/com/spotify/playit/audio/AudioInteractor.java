@@ -1,4 +1,4 @@
-package com.spotify.cl.audio;
+package com.spotify.playit.audio;
 
 import android.media.MediaPlayer;
 
