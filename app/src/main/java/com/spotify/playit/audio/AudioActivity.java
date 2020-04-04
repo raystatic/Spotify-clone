@@ -61,7 +61,7 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
     SeekBar seekBar;
     FloatingActionButton fab;
 
-    TextView permission_not_granted_tv, peek_song_name_tv, songNameTv;
+    TextView permission_not_granted_tv, peek_song_name_tv, songNameTv, noSongsFoundTv;
 
     LinearLayout main_layout, bottomBar;
 
@@ -357,6 +357,7 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         bottomBar = findViewById(R.id.bottom_bar);
         peek_song_name_tv = findViewById(R.id.peek_song_name_tv);
         permission_not_granted_tv = findViewById(R.id.permission_not_granted_tv);
+        noSongsFoundTv = findViewById(R.id.no_songs_found_tv);
         peekPlayBtn = findViewById(R.id.peek_song_play_btn);
         fab = findViewById(R.id.fab_btn);
         seekBar = findViewById(R.id.song_seek_bar);
@@ -402,15 +403,19 @@ public class AudioActivity extends AppCompatActivity implements AudioRecyclerAda
         loadAudio();
 
         progressBar.setVisibility(View.GONE);
-        main_layout.setVisibility(View.VISIBLE);
 
         if (audioList!=null && audioList.size()!=0){
             adapter = new AudioRecyclerAdapter(AudioActivity.this,audioList, this);
             LinearLayoutManager layoutManager = new LinearLayoutManager(AudioActivity.this);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(layoutManager);
+            main_layout.setVisibility(View.VISIBLE);
         }else{
             Toast.makeText(AudioActivity.this, "Unable to find songs on the device!",Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+            llBottomSheet.setVisibility(View.GONE);
+            bottomBar.setVisibility(View.GONE);
+            noSongsFoundTv.setVisibility(View.VISIBLE);
         }
     }
 
