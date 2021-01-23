@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "128431169354",
+    "project_id": "playit-android",
+    "storage_bucket": "playit-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128431169354:android:f26c863b96a245c42febb3",
+        "android_client_info": {
+          "package_name": "com.spotify.playit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "128431169354-i89nqgb1gsq80q6fo85v8d88k01ub075.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrpILDC84w2PToYvokpvu1KRMQvpOYxh4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "128431169354-i89nqgb1gsq80q6fo85v8d88k01ub075.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
