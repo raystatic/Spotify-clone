@@ -24,7 +24,8 @@
         <activity android:name="com.spotify.playit.audio.AudioActivity"></activity>
         <activity
             android:name="com.spotify.playit.SplashActivity"
-            android:theme="@style/Theme.Transparent">
+            android:theme="@style/Theme.Transparent"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
