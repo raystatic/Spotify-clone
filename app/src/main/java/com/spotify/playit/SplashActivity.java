@@ -2,14 +2,20 @@ package com.spotify.playit;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -29,9 +35,20 @@ public class SplashActivity extends AppCompatActivity {
     FirebaseFirestore db;
     private String android_id;
 
+    private Dialog chooserDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try {
+            Intent intent = new Intent();
+            intent.setClassName(SplashActivity.this.getPackageName(),"com.spotify.playit.video.VideoActivity");
+            SplashActivity.this.startActivity(intent);
+            SplashActivity.this.finish();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         db = FirebaseFirestore.getInstance();
 
@@ -43,8 +60,45 @@ public class SplashActivity extends AppCompatActivity {
 
         setContentView(R.layout.splash_screen1);
 
-        IntentLauncher launcher = new IntentLauncher();
-        launcher.start();
+        initChooserDialog();
+
+//        IntentLauncher launcher = new IntentLauncher();
+//        launcher.start();
+
+    }
+
+    private void initChooserDialog() {
+        chooserDialog = new Dialog(this);
+        chooserDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        chooserDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        chooserDialog.setContentView(LayoutInflater.from(this).inflate(R.layout.choose_dialog,null, false));
+
+        CardView audio = chooserDialog.findViewById(R.id.cardAudio);
+        CardView video = chooserDialog.findViewById(R.id.cardVideo);
+
+        audio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SplashActivity.this, AudioActivity.class);
+                SplashActivity.this.startActivity(intent);
+                SplashActivity.this.finish();
+            }
+        });
+
+        video.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent intent = new Intent();
+                    intent.setClassName(SplashActivity.this.getPackageName(),"com.spotify.playit.video.VideoActivity");
+                    SplashActivity.this.startActivity(intent);
+                    SplashActivity.this.finish();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        });
 
     }
 
@@ -63,9 +117,32 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             // Start main activity
-            Intent intent = new Intent(SplashActivity.this, AudioActivity.class);
-            SplashActivity.this.startActivity(intent);
-            SplashActivity.this.finish();
+//            Intent intent = new Intent(SplashActivity.this, AudioActivity.class);
+//            SplashActivity.this.startActivity(intent);
+//            SplashActivity.this.finish();
+
+            try {
+                Intent intent = new Intent();
+                intent.setClassName(SplashActivity.this.getPackageName(),"com.spotify.playit.video.VideoActivity");
+                SplashActivity.this.startActivity(intent);
+                SplashActivity.this.finish();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+//            SplashActivity.this.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (chooserDialog!=null){
+//                        chooserDialog.show();
+//                        Window window = chooserDialog.getWindow();
+//                        window.setLayout(
+//                                WindowManager.LayoutParams.MATCH_PARENT,
+//                                WindowManager.LayoutParams.WRAP_CONTENT
+//                        );
+//                    }
+//                }
+//            });
         }
     }
 
