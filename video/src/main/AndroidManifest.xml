@@ -2,11 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.spotify.playit.video">
 
-    <application>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <application
+        android:name=".BaseApplication">
         <activity
             android:name=".VideoActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Spotify" />
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -1,6 +1,8 @@
 package com.spotify.playit.video.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -23,25 +25,30 @@ fun SongItem(
     onClick:(String) -> Unit
 ) {
     Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+            .clickable {
+                onClick(title)
+            }
+            .padding(16.dp)
     ) {
         Text(
             text = title,
             fontSize = 16.sp,
             fontFamily = fontFamily,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.Light,
             color = Color.White,
         )
 
-        Image(
-            painter = painterResource(id = R.drawable.ic_right_arrow),
-            contentDescription = "right",
-            modifier = Modifier.size(16.dp),
-            alignment = Alignment.Center
-        )
+       if (isDirectory){
+           Image(
+               painter = painterResource(id = R.drawable.ic_right_arrow),
+               contentDescription = "right",
+               modifier = Modifier.size(16.dp),
+               alignment = Alignment.Center
+           )
+       }
     }
 
 
